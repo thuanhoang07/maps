@@ -5,19 +5,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Google Map Example Using Javascript</title>
 
+    <!-- Load the Google Maps API -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBRr6PMgMCG4GrlhCbO_wp466zIhddRJlg&callback=initMap"
             async defer></script>
 
+    <!-- Link to your JavaScript and CSS -->
     <script src="index.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div id="map">
+<div id="map"></div> <!-- Map container -->
 
-</div>
+<p id="directions"></p> <!-- Directions or other information -->
 
-<p id="directions"></p>
+<!-- Input toggle switch -->
+<label class="switch">
+    <input type="checkbox" id="the_switch">
+    <span class="slider round"></span>
+</label>
+
+<div id="overlay"></div> <!-- Overlay for displaying information -->
+
+<script src="https://www.unpkg.com/@eohjsc/era-widget@1.0.14/src/index.js"></script>
+<script>
+    const eraWidget = new EraWidget();
+    let config = null;
+
+    eraWidget.onConfiguration((configuration) => {
+        config = configuration.realtime_configs[1];
+        updateOverlay();
+    });
+
+    eraWidget.onValues((values) => {
+        const input = document.getElementById('the_switch');
+        if (input) {
+            input.checked = values[config.id]?.value;
+        }
+        updateOverlay();
+    });
+
+    function updateOverlay() {
+        const overlay = document.getElementById('overlay');
+        const input = document.getElementById('the_switch');
+        overlay.innerHTML = `
+            <strong>Config Name:</strong> ${config ? config.name : 'N/A'}<br>
+            <strong>Input Element Information:</strong><br>
+            ${input ? `
+                <strong>outerHTML:</strong> ${input.outerHTML}<br>
+                <strong>Type:</strong> ${input.type}<br>
+                <strong>Checked:</strong> ${input.checked}<br>
+                <strong>ID:</strong> ${input.id}<br>
+                <strong>Name:</strong> ${input.name || 'N/A'}<br>
+                <strong>Value:</strong> ${input.value}<br>
+            ` : 'Input element not found'}
+            <br>
+            <strong>EraWidget:</strong> ${JSON.stringify(eraWidget)}
+        `;
+    }
+
+    eraWidget.ready();
+</script>
 
 </body>
 </html>
