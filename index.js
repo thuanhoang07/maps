@@ -3,19 +3,19 @@ let map;
 // Array of markers
 let markers = [
     {
-        coordinates: { lat: 10.762622, lng: 106.660172 },  // Tọa độ TP HCM
+        coordinates: { lat: 21.028511, lng: 105.804817 },  // Tọa độ TP HCM
         iconImage: 'https://img.icons8.com/fluent/48/000000/marker-storm.png',
         content: '<h4>TP Hồ Chí Minh</h4>'
     },
     {
-        coordinates: { lat: 10.77689, lng: 106.700981 }  // Một vị trí khác ở TP HCM
+        coordinates: { lat: 21.028511, lng: 105.804817 }  // Một vị trí khác ở TP HCM
     }
 ]
 
 function initMap() {
     const options = {
         zoom: 16,
-        center: { lat: 10.762622, lng: 106.660172 }  // Trung tâm TP HCM
+        center: { lat: 21.028511, lng: 105.804817 }  // Trung tâm TP HCM
     }
 
     map = new google.maps.Map(
@@ -70,8 +70,8 @@ function drawDirection() {
 }
 
 function calculationAndDisplayRoute(directionService, directionRenderer) {
-    const start = { lat: 10.762622, lng: 106.660172 };  // Điểm bắt đầu ở TP HCM
-    const end = { lat: 10.77689, lng: 106.700981 };    // Điểm kết thúc ở TP HCM
+    const start = { lat: 21.028511, lng: 105.804817 };  // Điểm bắt đầu ở TP HCM
+    const end = { lat: 21.028511, lng: 105.804817 };    // Điểm kết thúc ở TP HCM
     const request = {
         origin: start,
         destination: end,
