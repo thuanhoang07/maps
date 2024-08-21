@@ -21,7 +21,7 @@
 
 <!-- Input toggle switch -->
 <label class="switch">
-    <input type="checkbox" id="value">
+    <input type="checkbox" id="name">
     <span class="slider round"></span>
 </label>
 
@@ -49,6 +49,8 @@
         const overlay = document.getElementById('overlay');
         const input = document.getElementById('the_switch');
         overlay.innerHTML = `
+
+            <strong>Config:</strong> ${JSON.stringify(config)}<br>
             <strong>Config Name:</strong> ${config ? config.name : 'N/A'}<br>
             <strong>Input Element Information:</strong><br>
             ${input ? `
