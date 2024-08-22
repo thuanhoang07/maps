@@ -21,15 +21,18 @@ function initMap() {
     });
 
     // Khởi tạo đối tượng Polyline để vẽ đường đi
-    path = new google.maps.Polyline({
-        path: pathCoordinates,
-        geodesic: true,
-        strokeColor: '#FF0000',
-        strokeOpacity: 1.0,
-        strokeWeight: 4
-    });
-
-    path.setMap(map);
+    if (GPSON ===1){
+        path = new google.maps.Polyline({
+            path: pathCoordinates,
+            geodesic: true,
+            strokeColor: '#FF0000',
+            strokeOpacity: 1.0,
+            strokeWeight: 4
+        });
+    
+        path.setMap(map);
+    }
+    
 
     // Cập nhật tọa độ của map và marker liên tục mỗi giây
     setInterval(updateMapCenter, 1000);
