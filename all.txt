@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Map Example Using Javascript</title>
+
+    <!-- Load the Google Maps API -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBRr6PMgMCG4GrlhCbO_wp466zIhddRJlg&callback=initMap"
+            async defer></script>
+
+    <!-- Link to your JavaScript and CSS -->
+    <script src="index.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="map"></div> <!-- Map container -->
+
+<p id="directions"></p> <!-- Directions or other information -->
+
+<!-- Input toggle switch -->
+<!-- <label class="switch">
+    <input type="checkbox" id="name">
+    <span class="slider round"></span>
+</label> -->
+
+<script src="https://www.unpkg.com/@eohjsc/era-widget@1.0.14/src/index.js"></script>
+<script>
+    const eraWidget = new EraWidget();
+    let configLAT = null;
+    let configLON = null;
+    
+    eraWidget.onConfiguration((configuration) => {
+        console.log(configuration);
+        configLAT = configuration.realtime_configs[0];
+        configLON = configuration.realtime_configs[1];
+        console.log("Configuration Loaded:", configuration);
+    });
+
+    eraWidget.onValues((values) => {
+        
+        console.log("Value:", values);
+        if (configLAT && values[configLAT.id]) {
+            LAT = values[configLAT.id].value;
+            console.log("Value LAT:", LAT);
+        }
+        if (configLON && values[configLON.id]) {
+            LON = values[configLON.id].value;
+            console.log("Value LON:", LON);
+        }
+    });
+    eraWidget.ready();
+</script> 
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+let map;
+let marker;
+let LAT = 20.028511;  
+let LON = 105.804817; 
+
+function initMap() {
+    const options = {
+        zoom: 14,
+        center: { lat: LAT, lng: LON } 
+    }
+
+    map = new google.maps.Map(document.getElementById('map'), options);
+
+    // Đặt marker ban đầu
+    marker = new google.maps.Marker({
+        position: { lat: LAT, lng: LON },
+        map: map
+    });
+
+    // Cập nhật tọa độ của map và marker liên tục mỗi giây
+    setInterval(updateMapCenter, 1000);
+}
+
+function updateMapCenter() {
+    if (LAT && LON) {
+        const newCenter = { lat: parseFloat(LAT), lng: parseFloat(LON) };
+
+        // Cập nhật vị trí trung tâm của map
+        map.setCenter(newCenter);
+
+        // Cập nhật vị trí của marker
+        marker.setPosition(newCenter);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ #map {
+     height: 400px;
+     width: 100%;
+ }
+
+
+
+
+
+
+
+
+
