@@ -20,54 +20,57 @@
 <p id="directions"></p> <!-- Directions or other information -->
 
 <!-- Input toggle switch -->
-<label class="switch">
+<!-- <label class="switch">
     <input type="checkbox" id="name">
     <span class="slider round"></span>
-</label>
+</label> -->
 
 <div id="overlay"></div> <!-- Overlay for displaying information -->
 
 <script src="https://www.unpkg.com/@eohjsc/era-widget@1.0.14/src/index.js"></script>
 <script>
     const eraWidget = new EraWidget();
-    let config = null;
+    let configlat = null;
+    let configlon = null;
+    let latValue = null;
+    let lonValue = null;
 
     eraWidget.onConfiguration((configuration) => {
-        config = configuration.realtime_configs[1];
-        updateOverlay();
+        configlat = configuration.realtime_configs.find(config => config.name === 'lat');
+        configlon = configuration.realtime_configs.find(config => config.name === 'lon');
     });
 
     eraWidget.onValues((values) => {
-        const input = document.getElementById('the_switch');
-        if (input) {
-            input.checked = values[config.id]?.value;
+        if (configlat && values[configlat.id]) {
+            latValue = values[configlat.id].value;
+            document.getElementById('lat').checked = latValue > 0;
+            document.getElementById('lat').value = latValue;
         }
+
+        if (configlon && values[configlon.id]) {
+            lonValue = values[configlon.id].value;
+            document.getElementById('lon').checked = lonValue > 0;
+            document.getElementById('lon').value = lonValue;
+        }
+
         updateOverlay();
     });
 
     function updateOverlay() {
         const overlay = document.getElementById('overlay');
-        const input = document.getElementById('the_switch');
         overlay.innerHTML = `
-
-            <strong>Config:</strong> ${JSON.stringify(config)}<br>
-            <strong>Config Name:</strong> ${config ? config.name : 'N/A'}<br>
-            <strong>Input Element Information:</strong><br>
-            ${input ? `
-                <strong>outerHTML:</strong> ${input.outerHTML}<br>
-                <strong>Type:</strong> ${input.type}<br>
-                <strong>Checked:</strong> ${input.checked}<br>
-                <strong>ID:</strong> ${input.id}<br>
-                <strong>Name:</strong> ${input.name || 'N/A'}<br>
-                <strong>Value:</strong> ${input.value}<br>
-            ` : 'Input element not found'}
-            <br>
-            <strong>EraWidget:</strong> ${JSON.stringify(eraWidget)}
+            <p style="color: red;">
+                <strong>Config lat:</strong> ${configlat ? JSON.stringify(configlat) : 'N/A'}<br>
+                <strong>Config lon:</strong> ${configlon ? JSON.stringify(configlon) : 'N/A'}<br>
+                <strong>latValue:</strong> ${latValue !== null ? latValue : 'N/A'}<br>
+                <strong>lonValue:</strong> ${lonValue !== null ? lonValue : 'N/A'}<br>
+            </p>
         `;
     }
 
     eraWidget.ready();
 </script>
+
 
 </body>
 </html>
