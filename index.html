@@ -31,6 +31,7 @@
 <script>
     const eraWidget = new EraWidget();
     let config = null;
+    let LONvalue = null;
 
     eraWidget.onConfiguration((configuration) => {
         config = configuration.realtime_configs[1];
@@ -39,34 +40,25 @@
 
     eraWidget.onValues((values) => {
         const input = document.getElementById('LON');
-        if (input) {
-            input.checked = values[config.id]?.value;
-        }
-        updateOverlay();
+        LONvalue = values[config.id].value; 
+        input.checked = LONvalue >= 0;
+        updateOverlay();  // Update the overlay with the new LONvalue
     });
 
     function updateOverlay() {
         const overlay = document.getElementById('overlay');
-        const input = document.getElementById('LON');
         overlay.innerHTML = `
-            <strong>Config:</strong> ${JSON.stringify(config)}<br>
-            <strong>Config Name:</strong> ${config ? config.name : 'N/A'}<br>
-            <strong>Input Element Information:</strong><br>
-            ${input ? `
-                <strong>outerHTML:</strong> ${input.outerHTML}<br>
-                <strong>Type:</strong> ${input.type}<br>
-                <strong>Checked:</strong> ${input.checked}<br>
-                <strong>ID:</strong> ${input.id}<br>
-                <strong>Name:</strong> ${input.name || 'N/A'}<br>
-                <strong>Value:</strong> ${input.value}<br>
-            ` : 'Input element not found'}
-            <br>
-            <strong>EraWidget:</strong> ${JSON.stringify(eraWidget)}
+            <p style="color: red;">
+                <strong>LONvalue:</strong> ${LONvalue !== null ? LONvalue : 'N/A'}
+            </p>
         `;
     }
 
     eraWidget.ready();
 </script>
+
+<!-- Add this to your HTML to display the value -->
+<div id="overlay"></div>
 
 </body>
 </html>
