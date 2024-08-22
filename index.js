@@ -22,6 +22,13 @@ function initMap() {
     });
 
     // Initialize Polyline object to draw the path
+    initializePath();
+
+    // Update map and marker coordinates every second
+    setInterval(updateMapCenter, 1000);
+}
+
+function initializePath() {
     path = new google.maps.Polyline({
         path: pathCoordinates,
         geodesic: true,
@@ -30,9 +37,6 @@ function initMap() {
         strokeWeight: 4
     });
     path.setMap(map);
-
-    // Update map and marker coordinates every second
-    setInterval(updateMapCenter, 1000);
 }
 
 function updateMapCenter() {
@@ -47,8 +51,15 @@ function updateMapCenter() {
 
         // Add new position to the route if GPSON is 1
         if (GPSON === 1) {
+            if (pathCoordinates.length > 0) {
+                // Clear previous path coordinates to start a new segment
+                pathCoordinates = [];
+            }
             pathCoordinates.push(newCenter);
-            path.setPath(pathCoordinates); // Update the path
+            path.setPath(pathCoordinates); // Start a new path segment
+        } else if (GPSON === 0) {
+            // Clear the path coordinates to break the connection with the previous segment
+            pathCoordinates = [];
         }
     }
 }
