@@ -30,11 +30,13 @@
     const eraWidget = new EraWidget();
     let configLAT = null;
     let configLON = null;
+    let configGPSON = null;
     
     eraWidget.onConfiguration((configuration) => {
         console.log(configuration);
         configLAT = configuration.realtime_configs[0];
         configLON = configuration.realtime_configs[1];
+        configGPSON = configuration.realtime_configs[2];
         console.log("Configuration Loaded:", configuration);
     });
 
@@ -48,6 +50,10 @@
         if (configLON && values[configLON.id]) {
             LON = values[configLON.id].value;
             console.log("Value LON:", LON);
+        }
+        if (configGPSON && values[configGPSON.id]) {
+            GPSON = values[configGPSON.id].value;
+            console.log("Value GPSON:", GPSON);
         }
     });
     eraWidget.ready();

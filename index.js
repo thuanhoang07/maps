@@ -4,6 +4,7 @@ let path;
 let pathCoordinates = [];
 let LAT;  
 let LON; 
+let GPSON = 0;
 
 function initMap() {
     const options = {
@@ -36,7 +37,7 @@ function initMap() {
 }
 
 function updateMapCenter() {
-    if (LAT && LON) {
+    if (GPSON === 1 && LAT && LON) {
         const newCenter = { lat: parseFloat(LAT), lng: parseFloat(LON) };
 
         // Cập nhật vị trí trung tâm của map
