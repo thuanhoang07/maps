@@ -22,7 +22,9 @@ function initMap() {
     });
 
     // Initialize Polyline object to draw the path
-    initializePath();
+    if (GPSON === 1) {
+        initializePath();
+    }
 
     // Update map and marker coordinates every second
     setInterval(updateMapCenter, 1000);
@@ -49,17 +51,17 @@ function updateMapCenter() {
         // Update the marker's position
         marker.setPosition(newCenter);
 
-        // Add new position to the route if GPSON is 1
+        // Add new position to the route
         if (GPSON === 1) {
-            if (pathCoordinates.length > 0) {
-                // Clear previous path coordinates to start a new segment
-                pathCoordinates = [];
-            }
             pathCoordinates.push(newCenter);
-            path.setPath(pathCoordinates); // Start a new path segment
-        } else if (GPSON === 0) {
-            // Clear the path coordinates to break the connection with the previous segment
-            pathCoordinates = [];
+            if (!path) {
+                initializePath(); // Reinitialize the path if GPSON was set to 1
+            }
+            path.setPath(pathCoordinates); // Update the path
+        } else if (GPSON === 0 && path) {
+            path.setMap(null); // Remove the existing path from the map
+            pathCoordinates = []; // Clear the path coordinates
+            path = null; // Reset the path object
         }
     }
 }
