@@ -15,15 +15,8 @@
 </head>
 <body>
 
-<div id="map"></div> <!-- Map container -->
-
-<p id="directions"></p> <!-- Directions or other information -->
-
-<!-- Input toggle switch -->
-<!-- <label class="switch">
-    <input type="checkbox" id="name">
-    <span class="slider round"></span>
-</label> -->
+<!-- Add this to your HTML to display the values -->
+<div id="overlay"></div>
 
 <script src="https://www.unpkg.com/@eohjsc/era-widget@1.0.14/src/index.js"></script>
 <script>
@@ -36,6 +29,7 @@
     eraWidget.onConfiguration((configuration) => {
         configLAT = configuration.realtime_configs[0];
         configLON = configuration.realtime_configs[1];
+        console.log("Configuration Loaded:", configuration);
     });
 
     eraWidget.onValues((values) => {
@@ -43,15 +37,15 @@
             const input1 = document.getElementById('Lat');
             latValue = values[configLAT.id].value; 
             input1.checked = latValue > 0;
-            updateOverlay(); 
+            console.log("Latitude Value:", latValue);
         }
         if (configLON && values[configLON.id]) {
             const input2 = document.getElementById('LON');
             LONValue = values[configLON.id].value; 
             input2.checked = LONValue > 0; 
-            updateOverlay();
+            console.log("Longitude Value:", LONValue);
         }
-        
+        updateOverlay();  // Moved updateOverlay here so it gets called after both values are set
     });
 
     function updateOverlay() {
@@ -66,9 +60,6 @@
 
     eraWidget.ready();
 </script> 
-
-<!-- Add this to your HTML to display the values -->
-<div id="overlay"></div>
 
 </body>
 </html>
