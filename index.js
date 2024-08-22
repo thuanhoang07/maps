@@ -1,42 +1,34 @@
 let map;
-let pathCoordinates = [];
-let path;
+let marker;
+let LAT = 20.028511;  
+let LON = 105.804817; 
 
 function initMap() {
-    const mapOptions = {
-        zoom: 15, // Phóng to bản đồ
-        center: { lat: LAT, lng: LON } // Tọa độ ban đầu từ biến LAT, LON
-    };
+    const options = {
+        zoom: 14,
+        center: { lat: LAT, lng: LON } 
+    }
 
-    map = new google.maps.Map(document.getElementById('map'), mapOptions);
+    map = new google.maps.Map(document.getElementById('map'), options);
 
-    path = new google.maps.Polyline({
-        path: pathCoordinates,
-        geodesic: true,
-        strokeColor: '#FF0000',
-        strokeOpacity: 1.0,
-        strokeWeight: 4
+    // Đặt marker ban đầu
+    marker = new google.maps.Marker({
+        position: { lat: LAT, lng: LON },
+        map: map
     });
 
-    path.setMap(map);
-
-    // Bắt đầu theo dõi và cập nhật đường đi
-    startTracking();
+    // Cập nhật tọa độ của map và marker liên tục mỗi giây
+    setInterval(updateMapCenter, 1000);
 }
 
-function startTracking() {
-    setInterval(updatePath, 1000); // Cập nhật đường đi mỗi giây (1000ms)
-}
+function updateMapCenter() {
+    if (LAT && LON) {
+        const newCenter = { lat: parseFloat(LAT), lng: parseFloat(LON) };
 
-function updatePath() {
-    if (LAT && LON) { // Kiểm tra xem LAT và LON có giá trị hợp lệ không
-        const latLng = new google.maps.LatLng(LAT, LON);
+        // Cập nhật vị trí trung tâm của map
+        map.setCenter(newCenter);
 
-        // Thêm vị trí mới vào tuyến đường
-        pathCoordinates.push(latLng);
-        path.setPath(pathCoordinates);
-
-        // Di chuyển trung tâm bản đồ đến vị trí hiện tại
-        map.setCenter(latLng);
+        // Cập nhật vị trí của marker
+        marker.setPosition(newCenter);
     }
 }
