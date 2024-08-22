@@ -20,54 +20,55 @@
 <p id="directions"></p> <!-- Directions or other information -->
 
 <!-- Input toggle switch -->
-<label class="switch">
+<!-- <label class="switch">
     <input type="checkbox" id="name">
     <span class="slider round"></span>
-</label>
-
-<div id="overlay"></div> <!-- Overlay for displaying information -->
+</label> -->
 
 <script src="https://www.unpkg.com/@eohjsc/era-widget@1.0.14/src/index.js"></script>
 <script>
     const eraWidget = new EraWidget();
-    let config = null;
-
+    let configLAT = null;
+    let configLON = null;
+    let latValue = null;
+    let LONValue = null;
+    
     eraWidget.onConfiguration((configuration) => {
-        config = configuration.realtime_configs[1];
-        updateOverlay();
+        console.log(configuration);
+        configLAT = configuration.realtime_configs[0];
+        configLON = configuration.realtime_configs[1];
     });
 
     eraWidget.onValues((values) => {
-        const input = document.getElementById('the_switch');
-        if (input) {
-            input.checked = values[config.id]?.value;
+        if (configLAT && values[configLAT.id]) {
+            const input1 = document.getElementById('Lat');
+            latValue = values[configLAT.id].value; 
+            input1.checked = latValue > 0; 
         }
-        updateOverlay();
+        if (configLON && values[configLON.id]) {
+            const input2 = document.getElementById('LON');
+            LONValue = values[configLON.id].value; 
+            input2.checked = LONValue > 0; 
+        }
+        updateOverlay(); // Call the function to display the values
+        console.log(values);
     });
 
     function updateOverlay() {
         const overlay = document.getElementById('overlay');
-        const input = document.getElementById('the_switch');
         overlay.innerHTML = `
-
-            <strong>Config:</strong> ${JSON.stringify(config)}<br>
-            <strong>Config Name:</strong> ${config ? config.name : 'N/A'}<br>
-            <strong>Input Element Information:</strong><br>
-            ${input ? `
-                <strong>outerHTML:</strong> ${input.outerHTML}<br>
-                <strong>Type:</strong> ${input.type}<br>
-                <strong>Checked:</strong> ${input.checked}<br>
-                <strong>ID:</strong> ${input.id}<br>
-                <strong>Name:</strong> ${input.name || 'N/A'}<br>
-                <strong>Value:</strong> ${input.value}<br>
-            ` : 'Input element not found'}
-            <br>
-            <strong>EraWidget:</strong> ${JSON.stringify(eraWidget)}
+            <p style="color: red;">
+                <strong>latValue:</strong> ${latValue !== null ? latValue : 'N/A'}<br>
+                <strong>LONValue:</strong> ${LONValue !== null ? LONValue : 'N/A'}
+            </p>
         `;
     }
 
     eraWidget.ready();
-</script>
+</script> 
+
+<!-- Add this to your HTML to display the values -->
+<div id="overlay"></div>
 
 </body>
 </html>
