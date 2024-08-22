@@ -35,8 +35,6 @@
     const eraWidget = new EraWidget();
     let configlat = null;
     let configlon = null;
-    let latValue = null;
-    let lonValue = null;
 
     eraWidget.onConfiguration((configuration) => {
         configlat = configuration.realtime_configs.find(config => config.name === 'lat');
@@ -45,13 +43,13 @@
 
     eraWidget.onValues((values) => {
         if (configlat && values[configlat.id]) {
-            latValue = values[configlat.id].value;
+            const latValue = values[configlat.id].value;
             document.getElementById('latCheckbox').checked = latValue > 0;
             document.getElementById('lat').value = latValue;
         }
 
         if (configlon && values[configlon.id]) {
-            lonValue = values[configlon.id].value;
+            const lonValue = values[configlon.id].value;
             document.getElementById('lonCheckbox').checked = lonValue > 0;
             document.getElementById('LON').value = lonValue;
         }
