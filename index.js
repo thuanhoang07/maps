@@ -58,10 +58,11 @@ function updateMapCenter() {
                 initializePath(); // Reinitialize the path if GPSON was set to 1
             }
             path.setPath(pathCoordinates); // Update the path
-        } else if (GPSON === 0 && path) {
-            path.setMap(null); // Remove the existing path from the map
-            pathCoordinates = []; // Clear the path coordinates
-            path = null; // Reset the path object
         }
+        // } else if (GPSON === 0 && path) {
+        //     path.setMap(null); // Remove the existing path from the map
+        //     pathCoordinates = []; // Clear the path coordinates
+        //     path = null; // Reset the path object
+        // }
     }
 }
