@@ -2,8 +2,8 @@ let map;
 let marker;
 let path;
 let pathCoordinates = [];
-let LAT = 20.028511;  
-let LON = 105.804817; 
+let LAT = 10.832188;  
+let LON = 106.702410; 
 
 function initMap() {
     const options = {
