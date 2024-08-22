@@ -39,20 +39,20 @@
     });
 
     eraWidget.onValues((values) => {
-        if (configLAT && values[configLAT.id]) {
+        <!-- if (configLAT && values[configLAT.id]) { -->
             const input1 = document.getElementById('Lat');
             latValue = values[configLAT.id].value; 
             input1.checked = values[configLAT.id].value > 0; 
             console.log("Latitude Value:", latValue);
 
-        }
-        if (configTds && values[configTds.id]) {
+        <!-- } -->
+        <!-- if (configLON && values[configLON.id]) { -->
             const input2 = document.getElementById('LON');
             LONValue = values[configLON.id].value; 
             input2.checked = values[configLON.id].value > 0; 
             console.log("Longitude Value:", LONValue);
 
-        }
+        <!-- } -->
         console.log("Value:", values);
     });
     eraWidget.ready();
