@@ -4,6 +4,7 @@ let path;
 let pathCoordinates = [];
 let LAT;  
 let LON; 
+let GPSON = 0; // Assuming this variable is defined elsewhere
 
 function initMap() {
     const options = {
@@ -11,48 +12,56 @@ function initMap() {
         center: { lat: LAT, lng: LON } 
     }
 
-    // Khởi tạo bản đồ
+    // Initialize the map
     map = new google.maps.Map(document.getElementById('map'), options);
 
-    // Đặt marker ban đầu
+    // Place initial marker
     marker = new google.maps.Marker({
         position: { lat: LAT, lng: LON },
         map: map
     });
 
-    // Khởi tạo đối tượng Polyline để vẽ đường đi
-    if (GPSON ===1){
-        path = new google.maps.Polyline({
-            path: pathCoordinates,
-            geodesic: true,
-            strokeColor: '#FF0000',
-            strokeOpacity: 1.0,
-            strokeWeight: 4
-        });
-    
-        path.setMap(map);
+    // Initialize Polyline object to draw the path
+    if (GPSON === 1) {
+        initializePath();
     }
-    
 
-    // Cập nhật tọa độ của map và marker liên tục mỗi giây
+    // Update map and marker coordinates every second
     setInterval(updateMapCenter, 1000);
+}
+
+function initializePath() {
+    path = new google.maps.Polyline({
+        path: pathCoordinates,
+        geodesic: true,
+        strokeColor: '#FF0000',
+        strokeOpacity: 1.0,
+        strokeWeight: 4
+    });
+    path.setMap(map);
 }
 
 function updateMapCenter() {
     if (LAT && LON) {
         const newCenter = { lat: parseFloat(LAT), lng: parseFloat(LON) };
 
-        // Cập nhật vị trí trung tâm của map
+        // Update the map's center position
         map.setCenter(newCenter);
 
-        // Cập nhật vị trí của marker
+        // Update the marker's position
         marker.setPosition(newCenter);
 
-        // Thêm vị trí mới vào tuyến đường
-        if (GPSON ===1){
+        // Add new position to the route
+        if (GPSON === 1) {
             pathCoordinates.push(newCenter);
-            path.setPath(pathCoordinates); // Cập nhật đường đi
+            if (!path) {
+                initializePath(); // Reinitialize the path if GPSON was set to 1
+            }
+            path.setPath(pathCoordinates); // Update the path
+        } else if (GPSON === 0 && path) {
+            path.setMap(null); // Remove the existing path from the map
+            pathCoordinates = []; // Clear the path coordinates
+            path = null; // Reset the path object
         }
-        
     }
 }
