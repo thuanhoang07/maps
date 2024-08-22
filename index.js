@@ -46,7 +46,10 @@ function updateMapCenter() {
         marker.setPosition(newCenter);
 
         // Thêm vị trí mới vào tuyến đường
-        pathCoordinates.push(newCenter);
-        path.setPath(pathCoordinates); // Cập nhật đường đi
+        if (GPSON ===1){
+            pathCoordinates.push(newCenter);
+            path.setPath(pathCoordinates); // Cập nhật đường đi
+        }
+        
     }
 }
