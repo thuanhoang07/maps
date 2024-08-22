@@ -34,7 +34,6 @@
     let LONValue = null;
     
     eraWidget.onConfiguration((configuration) => {
-        console.log(configuration);
         configLAT = configuration.realtime_configs[0];
         configLON = configuration.realtime_configs[1];
     });
@@ -43,15 +42,16 @@
         if (configLAT && values[configLAT.id]) {
             const input1 = document.getElementById('Lat');
             latValue = values[configLAT.id].value; 
-            input1.checked = latValue > 0; 
+            input1.checked = latValue > 0;
+            updateOverlay(); 
         }
         if (configLON && values[configLON.id]) {
             const input2 = document.getElementById('LON');
             LONValue = values[configLON.id].value; 
             input2.checked = LONValue > 0; 
+            updateOverlay();
         }
-        updateOverlay(); // Call the function to display the values
-        console.log(values);
+        
     });
 
     function updateOverlay() {
