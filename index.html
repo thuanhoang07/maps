@@ -15,18 +15,24 @@
 </head>
 <body>
 
-<!-- Add this to your HTML to display the values -->
-<div id="overlay"></div>
+<div id="map"></div> <!-- Map container -->
+
+<p id="directions"></p> <!-- Directions or other information -->
+
+<!-- Input toggle switch -->
+<!-- <label class="switch">
+    <input type="checkbox" id="name">
+    <span class="slider round"></span>
+</label> -->
 
 <script src="https://www.unpkg.com/@eohjsc/era-widget@1.0.14/src/index.js"></script>
 <script>
     const eraWidget = new EraWidget();
     let configLAT = null;
     let configLON = null;
-    let latValue = null;
-    let LONValue = null;
     
     eraWidget.onConfiguration((configuration) => {
+        console.log(configuration);
         configLAT = configuration.realtime_configs[0];
         configLON = configuration.realtime_configs[1];
         console.log("Configuration Loaded:", configuration);
@@ -36,30 +42,20 @@
         if (configLAT && values[configLAT.id]) {
             const input1 = document.getElementById('Lat');
             latValue = values[configLAT.id].value; 
-            input1.checked = latValue > 0;
+            input1.checked = values[configLAT.id].value > 0; 
             console.log("Latitude Value:", latValue);
+
         }
-        if (configLON && values[configLON.id]) {
+        if (configTds && values[configTds.id]) {
             const input2 = document.getElementById('LON');
             LONValue = values[configLON.id].value; 
-            input2.checked = LONValue > 0; 
+            input2.checked = values[configLON.id].value > 0; 
             console.log("Longitude Value:", LONValue);
+
         }
-        updateOverlay();  // Moved updateOverlay here so it gets called after both values are set
+        console.log("Value:", values);
     });
-
-    function updateOverlay() {
-        const overlay = document.getElementById('overlay');
-        overlay.innerHTML = `
-            <p style="color: red;">
-                <strong>latValue:</strong> ${latValue !== null ? latValue : 'N/A'}<br>
-                <strong>LONValue:</strong> ${LONValue !== null ? LONValue : 'N/A'}
-            </p>
-        `;
-    }
-
     eraWidget.ready();
 </script> 
-
 </body>
 </html>
