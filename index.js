@@ -22,9 +22,7 @@ function initMap() {
     });
 
     // Initialize Polyline object to draw the path
-    if (GPSON === 1) {
-        initializePath();
-    }
+    initializePath();
 
     // Update map and marker coordinates every second
     setInterval(updateMapCenter, 1000);
@@ -51,17 +49,11 @@ function updateMapCenter() {
         // Update the marker's position
         marker.setPosition(newCenter);
 
-        // Add new position to the route
+        // Add new position to the route only if GPSON is 1
         if (GPSON === 1) {
             pathCoordinates.push(newCenter);
-            if (!path) {
-                initializePath(); // Reinitialize the path if GPSON was set to 1
-            }
-            path.setPath(pathCoordinates); // Update the path
-        } else if (GPSON === 0 && path) {
-            path.setMap(null); // Remove the existing path from the map
-            pathCoordinates = []; // Clear the path coordinates
-            path = null; // Reset the path object
+            path.setPath(pathCoordinates); // Continue drawing the path
         }
+        // If GPSON is 0, do not add to pathCoordinates, but keep updating the marker position
     }
 }
