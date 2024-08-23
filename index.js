@@ -117,3 +117,4 @@ function clearPaths() {
     pathCoordinates = [];
     lastPosition = null;
 }
+
