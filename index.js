@@ -105,7 +105,7 @@ function updateMapCenter() {
 
 function displaySpeedMarker(position, speed) {
     const marker = new google.maps.Marker({
-        position: { lat: position.lat + 0.002, lng: position.lng + 0.002}, // Adjusting the position slightly to the right
+        position: { lat: position.lat + 0.002, lng: position.lng + 0.002 }, // Adjusting the position slightly to the right
         map: map,
         icon: {
             path: google.maps.SymbolPath.CIRCLE, // Default marker shape
@@ -114,13 +114,14 @@ function displaySpeedMarker(position, speed) {
         label: {
             text: `${speed} km/h`,
             color: 'black',
-            fontSize: '5px',
+            fontSize: '10px', // Increase font size to 10px
             fontWeight: 'bold',
             className: 'speed-label' // Custom CSS class for additional styling
         }
     });
     speedMarkers.push(marker); // Store the marker so we can clear it later
 }
+
 
 
 
