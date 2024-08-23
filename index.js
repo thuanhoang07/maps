@@ -6,7 +6,7 @@ let pathCoordinates = [];
 let LAT;  
 let LON; 
 let SPEED;
-let DELETE = 0; // Assuming this variable is defined elsewhere
+let DELETE;
 let GPSON = 0; // Assuming this variable is defined elsewhere
 let lastPosition = null; // To store the last known position when GPSON is 1
 
@@ -64,14 +64,8 @@ function updateMapCenter() {
         // Update the marker's position
         marker.setPosition(newCenter);
 
-        // If DELETE is 1, do not draw any paths, just update the map center and marker
-        if (DELETE === 1) {
-            clearPaths(); // Clear existing paths
-            return; // Exit to avoid any drawing
-        }
-
-        // If DELETE is 0 and GPSON is 1, proceed to draw paths
-        if (GPSON === 1 && DELETE === 0) {
+        // If GPSON is 1, add new position to the route
+        if (GPSON === 1) {
             const strokeColor = getStrokeColorBasedOnSpeed(SPEED);
 
             // If the path color has changed or a new path is needed, start a new segment
@@ -104,17 +98,3 @@ function updateMapCenter() {
         }
     }
 }
-
-function clearPaths() {
-    // Clear the current path
-    if (currentPath) {
-        currentPath.setMap(null); // Remove the current path from the map
-    }
-
-    // Reset all variables related to the path
-    currentPath = null;
-    currentColor = null;
-    pathCoordinates = [];
-    lastPosition = null;
-}
-
