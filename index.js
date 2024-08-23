@@ -104,9 +104,6 @@ function updateMapCenter() {
 }
 
 function displaySpeedMarker(position, speed) {
-    if (speed < 3) {
-        return; // Do not display the speed if it's less than 10 km/h
-    }
     const marker = new google.maps.Marker({
         position: { lat: position.lat, lng: position.lng}, // Adjusting the position slightly to the right
         map: map,
