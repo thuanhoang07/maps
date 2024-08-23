@@ -6,6 +6,7 @@ let pathCoordinates = [];
 let LAT;  
 let LON; 
 let SPEED;
+let DELETE = 0; // Assuming this variable is defined elsewhere
 let GPSON = 0; // Assuming this variable is defined elsewhere
 let lastPosition = null; // To store the last known position when GPSON is 1
 
@@ -54,6 +55,12 @@ function initializePath(strokeColor) {
 }
 
 function updateMapCenter() {
+    if (DELETE === 1) {
+        // Clear all paths and reset variables
+        clearPaths();
+        return; // Exit the function to avoid further processing
+    }
+
     if (LAT && LON) {
         const newCenter = { lat: parseFloat(LAT), lng: parseFloat(LON) };
 
@@ -96,4 +103,17 @@ function updateMapCenter() {
             lastPosition = null;
         }
     }
+}
+
+function clearPaths() {
+    // Clear the current path
+    if (currentPath) {
+        currentPath.setMap(null); // Remove the current path from the map
+    }
+
+    // Reset all variables
+    currentPath = null;
+    currentColor = null;
+    pathCoordinates = [];
+    lastPosition = null;
 }
