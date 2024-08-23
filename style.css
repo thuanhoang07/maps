@@ -6,10 +6,13 @@
 /* Add the speed label styling */
 .speed-label {
     background-color: white;
-    padding: 2px 4px;
-    border-radius: 3px;
+    padding: 1px 2px; /* Matches the small font size */
+    border-radius: 2px; /* Keeps the corners slightly rounded */
     border: 1px solid black;
     font-family: Arial, sans-serif;
     text-align: center;
     display: inline-block;
+    font-size: 5px; /* Ensures small text size */
+    font-weight: bold; /* Keeps text bold for visibility */
+    line-height: 1; /* Aligns text with small size */
 }
