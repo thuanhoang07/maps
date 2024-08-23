@@ -1,7 +1,6 @@
 let map;
 let marker;
-let path;
-let pathCoordinates = [];
+let currentPath;
 let LAT;  
 let LON; 
 let GPSON = 0; // Assuming this variable is defined elsewhere
@@ -21,22 +20,19 @@ function initMap() {
         map: map
     });
 
-    // Initialize Polyline object to draw the path
-    initializePath();
-
     // Update map and marker coordinates every second
     setInterval(updateMapCenter, 1000);
 }
 
-function initializePath() {
-    path = new google.maps.Polyline({
-        path: pathCoordinates,
+function startNewPath() {
+    currentPath = new google.maps.Polyline({
+        path: [],
         geodesic: true,
         strokeColor: '#FF0000',
         strokeOpacity: 1.0,
         strokeWeight: 4
     });
-    path.setMap(map);
+    currentPath.setMap(map);
 }
 
 function updateMapCenter() {
@@ -49,17 +45,13 @@ function updateMapCenter() {
         // Update the marker's position
         marker.setPosition(newCenter);
 
-        // Add new position to the route only if GPSON is 1
+        // Only add new position to the route if GPSON is 1
         if (GPSON === 1) {
-            if (pathCoordinates.length === 0 || !areCoordinatesEqual(pathCoordinates[pathCoordinates.length - 1], newCenter)) {
-                // Only add the point if it's different from the last one
-                pathCoordinates.push(newCenter);
-                path.setPath(pathCoordinates); // Continue drawing the path
+            if (!currentPath) {
+                startNewPath(); // Start a new path if GPSON is 1 and no path is currently active
             }
+            const pathCoordinates = currentPath.getPath();
+            pathCoordinates.push(newCenter);
         }
     }
-}
-
-function areCoordinatesEqual(coord1, coord2) {
-    return coord1.lat === coord2.lat && coord1.lng === coord2.lng;
 }
