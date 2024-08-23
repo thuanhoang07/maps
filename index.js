@@ -24,7 +24,7 @@ function initMap() {
     });
 
     // Update map and marker coordinates every second
-    setInterval(updateMapCenter, 100);
+    setInterval(updateMapCenter, 1000);
 }
 
 function getStrokeColorBasedOnSpeed(speed) {
