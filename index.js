@@ -1,16 +1,17 @@
 let map;
 let marker;
-let currentPath;
+let path;
+let pathCoordinates = [];
 let LAT;  
-let LON;
-let SPEED; // Assume this variable is defined and updated elsewhere
+let LON; 
+let SPEED;
 let GPSON = 0; // Assuming this variable is defined elsewhere
 
 function initMap() {
     const options = {
         zoom: 14,
-        center: { lat: LAT, lng: LON }
-    };
+        center: { lat: LAT, lng: LON } 
+    }
 
     // Initialize the map
     map = new google.maps.Map(document.getElementById('map'), options);
@@ -39,16 +40,16 @@ function getStrokeColorBasedOnSpeed(speed) {
     }
 }
 
-function startNewPath() {
-    const strokeColor = getStrokeColorBasedOnSpeed(speed); // Get color based on current speed
-    currentPath = new google.maps.Polyline({
-        path: [],
+function initializePath() {
+    const strokeColor = getStrokeColorBasedOnSpeed(SPEED); // Determine color based on speed
+    path = new google.maps.Polyline({
+        path: pathCoordinates,
         geodesic: true,
         strokeColor: strokeColor,
         strokeOpacity: 1.0,
         strokeWeight: 4
     });
-    currentPath.setMap(map);
+    path.setMap(map);
 }
 
 function updateMapCenter() {
@@ -61,15 +62,15 @@ function updateMapCenter() {
         // Update the marker's position
         marker.setPosition(newCenter);
 
-        // Only add new position to the route if GPSON is 1
+        // Add new position to the route
         if (GPSON === 1) {
-            if (!currentPath) {
-                startNewPath(); // Start a new path if GPSON is 1 and no path is currently active
+            if (!path) {
+                initializePath(); // Initialize a new path if GPSON was set to 1
             }
-            // Add the new point to the current path
-            const pathCoordinates = currentPath.getPath();
             pathCoordinates.push(newCenter);
-            currentPath.setPath(pathCoordinates); // Update the path
+            path.setPath(pathCoordinates); // Update the path
+        } else if (GPSON === 0) {
+            path = null; // Stop adding to the current path without clearing the existing path
         }
     }
 }
