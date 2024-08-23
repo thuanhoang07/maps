@@ -80,15 +80,15 @@ function updateMapCenter() {
                 }
                 currentColor = strokeColor;
                 initializePath(strokeColor);
+
+                // Display the speed at the start of the new segment
+                displaySpeed(newCenter, SPEED);
             }
 
             // Add the new point to the current path
             pathCoordinates.push(newCenter);
             currentPath.setPath(pathCoordinates); // Update the path with the new coordinates
             
-            // Display the speed next to the path
-            displaySpeed(newCenter, SPEED);
-
             // Update the last position
             lastPosition = newCenter;
         } else {
@@ -112,5 +112,5 @@ function displaySpeed(position, speed) {
     // Automatically close the InfoWindow after a short delay
     setTimeout(() => {
         infoWindow.close();
-    }, 3000); // Adjust this time as needed
+    }, 5000); // Adjust this time as needed
 }
