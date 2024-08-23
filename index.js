@@ -51,9 +51,15 @@ function updateMapCenter() {
 
         // Add new position to the route only if GPSON is 1
         if (GPSON === 1) {
-            pathCoordinates.push(newCenter);
-            path.setPath(pathCoordinates); // Continue drawing the path
+            if (pathCoordinates.length === 0 || !areCoordinatesEqual(pathCoordinates[pathCoordinates.length - 1], newCenter)) {
+                // Only add the point if it's different from the last one
+                pathCoordinates.push(newCenter);
+                path.setPath(pathCoordinates); // Continue drawing the path
+            }
         }
-        // If GPSON is 0, do not add to pathCoordinates, but keep updating the marker position
     }
+}
+
+function areCoordinatesEqual(coord1, coord2) {
+    return coord1.lat === coord2.lat && coord1.lng === coord2.lng;
 }
