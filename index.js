@@ -7,7 +7,6 @@ let LAT;
 let LON; 
 let SPEED;
 let GPSON = 0; // Assuming this variable is defined elsewhere
-let lastPosition; // To store the last known position when GPSON is 1
 
 function initMap() {
     const options = {
@@ -69,28 +68,19 @@ function updateMapCenter() {
 
             // If the path color has changed or a new path is needed, start a new segment
             if (!currentPath || strokeColor !== currentColor || pathCoordinates.length === 0) {
-                // Ensure the new segment starts from the last position
-                if (lastPosition) {
-                    pathCoordinates.push(lastPosition);
-                }
-                
                 currentColor = strokeColor;
                 initializePath(strokeColor);
+                pathCoordinates = []; // Reset the path coordinates for a new segment
             }
 
             // Add the new point to the current path
             pathCoordinates.push(newCenter);
             currentPath.setPath(pathCoordinates); // Update the path with the new coordinates
-            
-            // Update the last position
-            lastPosition = newCenter;
         } else {
             // If GPSON is 0, finalize the current path segment
             if (currentPath) {
                 currentPath.setPath(pathCoordinates);
             }
-            // Reset last position when GPSON is turned off
-            lastPosition = null;
         }
     }
 }
