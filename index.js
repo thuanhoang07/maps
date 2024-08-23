@@ -50,8 +50,10 @@ function updateMapCenter() {
             if (!currentPath) {
                 startNewPath(); // Start a new path if GPSON is 1 and no path is currently active
             }
+            // Add the new point to the current path
             const pathCoordinates = currentPath.getPath();
             pathCoordinates.push(newCenter);
+            currentPath.setPath(pathCoordinates); // Update the path
         }
     }
 }
