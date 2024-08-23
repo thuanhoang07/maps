@@ -7,7 +7,7 @@ let LAT;
 let LON; 
 let SPEED;
 let GPSON = 0; // Assuming this variable is defined elsewhere
-let lastPosition; // To store the last known position when GPSON is 1
+let lastPosition = null; // To store the last known position when GPSON is 1
 
 function initMap() {
     const options = {
@@ -72,9 +72,13 @@ function updateMapCenter() {
                 if (pathCoordinates.length > 0) {
                     currentPath.setPath(pathCoordinates); // Finalize the previous segment
                 }
+                if (lastPosition) {
+                    pathCoordinates = [lastPosition]; // Start the new segment with the last point
+                } else {
+                    pathCoordinates = [];
+                }
                 currentColor = strokeColor;
                 initializePath(strokeColor);
-                pathCoordinates = []; // Start a new path segment with the new color
             }
 
             // Add the new point to the current path
