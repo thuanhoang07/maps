@@ -114,7 +114,7 @@ function displaySpeedMarker(position, speed) {
         label: {
             text: `${speed} km/h`,
             color: 'black',
-            fontSize: '12px',
+            fontSize: '5px',
             fontWeight: 'bold',
             className: 'speed-label' // Custom CSS class for additional styling
         }
