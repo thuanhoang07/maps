@@ -1,6 +1,6 @@
 let map;
 let marker;
-let path;
+let currentPath;
 let pathCoordinates = [];
 let LAT;  
 let LON; 
@@ -40,16 +40,15 @@ function getStrokeColorBasedOnSpeed(speed) {
     }
 }
 
-function initializePath() {
-    const strokeColor = getStrokeColorBasedOnSpeed(SPEED); // Determine color based on speed
-    path = new google.maps.Polyline({
-        path: pathCoordinates,
+function initializePath(strokeColor) {
+    currentPath = new google.maps.Polyline({
+        path: [],
         geodesic: true,
         strokeColor: strokeColor,
         strokeOpacity: 1.0,
         strokeWeight: 4
     });
-    path.setMap(map);
+    currentPath.setMap(map);
 }
 
 function updateMapCenter() {
@@ -64,13 +63,18 @@ function updateMapCenter() {
 
         // Add new position to the route
         if (GPSON === 1) {
-            if (!path) {
-                initializePath(); // Initialize a new path if GPSON was set to 1
+            const strokeColor = getStrokeColorBasedOnSpeed(SPEED);
+
+            // If there's no path or the color has changed, start a new segment
+            if (!currentPath || currentPath.strokeColor !== strokeColor) {
+                if (currentPath) {
+                    pathCoordinates = []; // Reset path coordinates for the new segment
+                }
+                initializePath(strokeColor); // Initialize a new path with the current color
             }
+
             pathCoordinates.push(newCenter);
-            path.setPath(pathCoordinates); // Update the path
-        } else if (GPSON === 0) {
-            path = null; // Stop adding to the current path without clearing the existing path
+            currentPath.setPath(pathCoordinates); // Update the path with new coordinates
         }
     }
 }
