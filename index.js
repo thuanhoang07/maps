@@ -1,6 +1,7 @@
 let map;
 let marker;
 let currentPath;
+let currentColor;
 let pathCoordinates = [];
 let LAT;  
 let LON; 
@@ -10,8 +11,8 @@ let GPSON = 0; // Assuming this variable is defined elsewhere
 function initMap() {
     const options = {
         zoom: 14,
-        center: { lat: LAT, lng: LON } 
-    }
+        center: { lat: LAT, lng: LON }
+    };
 
     // Initialize the map
     map = new google.maps.Map(document.getElementById('map'), options);
@@ -61,20 +62,23 @@ function updateMapCenter() {
         // Update the marker's position
         marker.setPosition(newCenter);
 
-        // Add new position to the route
+        // Add new position to the route if GPSON is 1
         if (GPSON === 1) {
             const strokeColor = getStrokeColorBasedOnSpeed(SPEED);
 
             // If there's no path or the color has changed, start a new segment
-            if (!currentPath || currentPath.strokeColor !== strokeColor) {
+            if (!currentPath || strokeColor !== currentColor) {
                 if (currentPath) {
-                    pathCoordinates = []; // Reset path coordinates for the new segment
+                    currentPath.setPath(pathCoordinates); // Finalize the previous segment
+                    pathCoordinates = []; // Start a new segment
                 }
-                initializePath(strokeColor); // Initialize a new path with the current color
+                currentColor = strokeColor; // Update the current color
+                initializePath(strokeColor); // Initialize a new path with the new color
             }
 
+            // Add the new point to the current path
             pathCoordinates.push(newCenter);
-            currentPath.setPath(pathCoordinates); // Update the path with new coordinates
+            currentPath.setPath(pathCoordinates); // Update the path with the new coordinates
         }
     }
 }
