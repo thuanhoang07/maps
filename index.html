@@ -31,6 +31,7 @@
     let configLAT = null;
     let configLON = null;
     let configGPSON = null;
+    let configSPEED = null;
     
     eraWidget.onConfiguration((configuration) => {
         console.log(configuration);
@@ -57,7 +58,7 @@
         }
         if (configSPEED && values[configSPEED.id]) {
             SPEED = values[configSPEED.id].value;
-            console.log("Value GPSON:", SPEED);
+            console.log("Value SPEED:", SPEED);
         }
     });
     eraWidget.ready();
