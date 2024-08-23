@@ -1,16 +1,16 @@
 let map;
 let marker;
-let path;
-let pathCoordinates = [];
+let currentPath;
 let LAT;  
-let LON; 
+let LON;
+let speed; // Assume this variable is defined and updated elsewhere
 let GPSON = 0; // Assuming this variable is defined elsewhere
 
 function initMap() {
     const options = {
         zoom: 14,
-        center: { lat: LAT, lng: LON } 
-    }
+        center: { lat: LAT, lng: LON }
+    };
 
     // Initialize the map
     map = new google.maps.Map(document.getElementById('map'), options);
@@ -21,24 +21,34 @@ function initMap() {
         map: map
     });
 
-    // Initialize Polyline object to draw the path
-    if (GPSON === 1) {
-        initializePath();
-    }
-
     // Update map and marker coordinates every second
     setInterval(updateMapCenter, 1000);
 }
 
-function initializePath() {
-    path = new google.maps.Polyline({
-        path: pathCoordinates,
+function getStrokeColorBasedOnSpeed(speed) {
+    if (speed <= 20) {
+        return '#0000FF'; // Blue
+    } else if (speed <= 40) {
+        return '#008000'; // Green
+    } else if (speed <= 60) {
+        return '#FF0000'; // Red
+    } else if (speed <= 80) {
+        return '#800080'; // Purple
+    } else {
+        return '#000000'; // Black
+    }
+}
+
+function startNewPath() {
+    const strokeColor = getStrokeColorBasedOnSpeed(speed); // Get color based on current speed
+    currentPath = new google.maps.Polyline({
+        path: [],
         geodesic: true,
-        strokeColor: '#FF0000',
+        strokeColor: strokeColor,
         strokeOpacity: 1.0,
         strokeWeight: 4
     });
-    path.setMap(map);
+    currentPath.setMap(map);
 }
 
 function updateMapCenter() {
@@ -51,17 +61,15 @@ function updateMapCenter() {
         // Update the marker's position
         marker.setPosition(newCenter);
 
-        // Add new position to the route
+        // Only add new position to the route if GPSON is 1
         if (GPSON === 1) {
-            pathCoordinates.push(newCenter);
-            if (!path) {
-                initializePath(); // Reinitialize the path if GPSON was set to 1
+            if (!currentPath) {
+                startNewPath(); // Start a new path if GPSON is 1 and no path is currently active
             }
-            path.setPath(pathCoordinates); // Update the path
-        } else if (GPSON === 0 && path) {
-            path.setMap(null); // Remove the existing path from the map
-            pathCoordinates = []; // Clear the path coordinates
-            path = null; // Reset the path object
+            // Add the new point to the current path
+            const pathCoordinates = currentPath.getPath();
+            pathCoordinates.push(newCenter);
+            currentPath.setPath(pathCoordinates); // Update the path
         }
     }
 }

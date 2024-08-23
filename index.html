@@ -37,11 +37,11 @@
         configLAT = configuration.realtime_configs[0];
         configLON = configuration.realtime_configs[1];
         configGPSON = configuration.realtime_configs[2];
+        configSPEED = configuration.realtime_configs[3];
         console.log("Configuration Loaded:", configuration);
     });
 
     eraWidget.onValues((values) => {
-        
         console.log("Value:", values);
         if (configLAT && values[configLAT.id]) {
             LAT = values[configLAT.id].value;
@@ -54,6 +54,10 @@
         if (configGPSON && values[configGPSON.id]) {
             GPSON = values[configGPSON.id].value;
             console.log("Value GPSON:", GPSON);
+        }
+        if (configSPEED && values[configSPEED.id]) {
+            SPEED = values[configSPEED.id].value;
+            console.log("Value GPSON:", SPEED);
         }
     });
     eraWidget.ready();
