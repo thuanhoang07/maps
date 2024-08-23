@@ -55,12 +55,6 @@ function initializePath(strokeColor) {
 }
 
 function updateMapCenter() {
-    if (DELETE === 1) {
-        // Clear all paths and reset variables
-        clearPaths();
-        return; // Exit the function to avoid further processing
-    }
-
     if (LAT && LON) {
         const newCenter = { lat: parseFloat(LAT), lng: parseFloat(LON) };
 
@@ -70,7 +64,13 @@ function updateMapCenter() {
         // Update the marker's position
         marker.setPosition(newCenter);
 
-        // If GPSON is 1, add new position to the route
+        // If DELETE is 1, do not draw any paths, just update the map center and marker
+        if (DELETE === 1) {
+            clearPaths(); // Clear existing paths
+            return; // Exit to avoid any drawing
+        }
+
+        // If DELETE is 0 and GPSON is 1, proceed to draw paths
         if (GPSON === 1) {
             const strokeColor = getStrokeColorBasedOnSpeed(SPEED);
 
@@ -111,10 +111,9 @@ function clearPaths() {
         currentPath.setMap(null); // Remove the current path from the map
     }
 
-    // Reset all variables
+    // Reset all variables related to the path
     currentPath = null;
     currentColor = null;
     pathCoordinates = [];
     lastPosition = null;
 }
-
