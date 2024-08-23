@@ -32,12 +32,14 @@
     let configLON = null;
     let configGPSON = null;
     let configSPEED = null;
+    let configDELETE = null;
     
     eraWidget.onConfiguration((configuration) => {
         configLAT = configuration.realtime_configs[0];
         configLON = configuration.realtime_configs[1];
         configGPSON = configuration.realtime_configs[2];
         configSPEED = configuration.realtime_configs[3];
+        configDELETE = configuration.realtime_configs[4];
         console.log("Configuration Loaded:", configuration);
     });
 
@@ -58,6 +60,10 @@
         if (configSPEED && values[configSPEED.id]) {
             SPEED = values[configSPEED.id].value;
             console.log("Value SPEED:", SPEED);
+        }
+        if (configDELETE && values[configDELETE.id]) {
+            DELETE = values[configDELETE.id].value;
+            console.log("Value SPEED:", DELETE);
         }
     });
     eraWidget.ready();
