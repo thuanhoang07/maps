@@ -1,4 +1,15 @@
- #map {
-     height: 400px;
-     width: 100%;
- }
+#map {
+    height: 400px;
+    width: 100%;
+}
+
+/* Add the speed label styling */
+.speed-label {
+    background-color: white;
+    padding: 2px 4px;
+    border-radius: 3px;
+    border: 1px solid black;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    display: inline-block;
+}
