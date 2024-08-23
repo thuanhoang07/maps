@@ -43,7 +43,7 @@ function getStrokeColorBasedOnSpeed(speed) {
 
 function initializePath(strokeColor) {
     currentPath = new google.maps.Polyline({
-        path: [...pathCoordinates], // Start the new path with the existing points
+        path: [],
         geodesic: true,
         strokeColor: strokeColor,
         strokeOpacity: 1.0,
@@ -70,6 +70,7 @@ function updateMapCenter() {
             if (!currentPath || strokeColor !== currentColor) {
                 if (currentPath) {
                     currentPath.setPath(pathCoordinates); // Finalize the previous segment
+                    pathCoordinates = []; // Start a new segment
                 }
                 currentColor = strokeColor; // Update the current color
                 initializePath(strokeColor); // Initialize a new path with the new color
