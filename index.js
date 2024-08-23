@@ -86,6 +86,9 @@ function updateMapCenter() {
             pathCoordinates.push(newCenter);
             currentPath.setPath(pathCoordinates); // Update the path with the new coordinates
             
+            // Display the speed next to the path
+            displaySpeed(newCenter, SPEED);
+
             // Update the last position
             lastPosition = newCenter;
         } else {
@@ -97,4 +100,17 @@ function updateMapCenter() {
             lastPosition = null;
         }
     }
+}
+
+function displaySpeed(position, speed) {
+    const infoWindow = new google.maps.InfoWindow({
+        content: `Speed: ${speed} km/h`,
+        position: position
+    });
+    infoWindow.open(map);
+
+    // Automatically close the InfoWindow after a short delay
+    setTimeout(() => {
+        infoWindow.close();
+    }, 3000); // Adjust this time as needed
 }
