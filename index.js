@@ -105,17 +105,26 @@ function updateMapCenter() {
 
 function displaySpeedMarker(position, speed) {
     const marker = new google.maps.Marker({
-        position: { lat: LAT, lng: LON + 0.001 },
+        position: { lat: position.lat + 0.001, lng: position.lng + 0.001 }, // Adjusting the position slightly
         map: map,
+        icon: {
+            path: google.maps.SymbolPath.CIRCLE, // Using a small circle as a marker
+            scale: 0, // Set scale to 0 to make the marker invisible
+            strokeColor: 'transparent', // Transparent stroke color
+            fillColor: 'transparent', // Transparent fill color
+            fillOpacity: 0, // Transparent fill
+        },
         label: {
             text: `${speed} km/h`,
             color: 'black',
             fontSize: '12px',
-            fontWeight: 'bold'
+            fontWeight: 'bold',
+            className: 'speed-label' // Optional: You can use CSS for further styling
         }
     });
     speedMarkers.push(marker); // Store the marker so we can clear it later
 }
+
 
 function clearSpeedMarkers() {
     // Remove all speed markers from the map
