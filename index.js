@@ -71,7 +71,7 @@ function updateMapCenter() {
         }
 
         // If DELETE is 0 and GPSON is 1, proceed to draw paths
-        if (GPSON === 1) {
+        if (GPSON === 1 && DELETE === 0) {
             const strokeColor = getStrokeColorBasedOnSpeed(SPEED);
 
             // If the path color has changed or a new path is needed, start a new segment
