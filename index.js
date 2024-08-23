@@ -25,7 +25,6 @@ function initMap() {
         position: { lat: LAT, lng: LON },
         map: map
     });
-
     // Update map and marker coordinates every second
     setInterval(updateMapCenter, 1000);
 }
@@ -106,10 +105,10 @@ function updateMapCenter() {
 
 function displaySpeedMarker(position, speed) {
     const marker = new google.maps.Marker({
-        position: position,
+        position: { lat: LAT, lng: LON + 0.001 },
         map: map,
         label: {
-            text: `Speed: ${speed} km/h`,
+            text: `${speed} km/h`,
             color: 'black',
             fontSize: '12px',
             fontWeight: 'bold'
