@@ -3,7 +3,7 @@ let marker;
 let currentPath;
 let LAT;  
 let LON;
-let speed; // Assume this variable is defined and updated elsewhere
+let SPEED; // Assume this variable is defined and updated elsewhere
 let GPSON = 0; // Assuming this variable is defined elsewhere
 
 function initMap() {
