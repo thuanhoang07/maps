@@ -28,41 +28,40 @@ function initMap() {
     setInterval(updateMapCenter, 1000);
 }
 
-function getStrokeColorBasedOnSpeed(speed) {
-    const maxSpeed = 100;
+function interpolateColor(color1, color2, factor) {
+    return [
+        Math.round(color1[0] + factor * (color2[0] - color1[0])),
+        Math.round(color1[1] + factor * (color2[1] - color1[1])),
+        Math.round(color1[2] + factor * (color2[2] - color1[2]))
+    ];
+}
 
+function getRainbowColorForSpeed(speed) {
     const colors = [
-        { stop: 0, color: [0, 0, 255] },     // Blue
-        { stop: 20, color: [0, 128, 0] },    // Green
-        { stop: 40, color: [255, 0, 0] },    // Red
-        { stop: 60, color: [128, 0, 128] },  // Purple
-        { stop: 80, color: [0, 0, 0] }       // Black
+        [255, 0, 0],    // Red
+        [255, 165, 0],  // Orange
+        [255, 255, 0],  // Yellow
+        [0, 255, 0],    // Green
+        [0, 0, 255],    // Blue
+        [75, 0, 130],   // Indigo
+        [238, 130, 238] // Violet
     ];
 
-    function interpolateColor(color1, color2, factor) {
-        return [
-            Math.round(color1[0] + factor * (color2[0] - color1[0])),
-            Math.round(color1[1] + factor * (color2[1] - color1[1])),
-            Math.round(color1[2] + factor * (color2[2] - color1[2]))
-        ];
+    const numColors = colors.length;
+    const maxSpeed = 100;
+    const segment = maxSpeed / (numColors - 1); // Divide speed into segments based on color range
+
+    let startColorIndex = Math.floor(speed / segment);
+    let endColorIndex = startColorIndex + 1;
+
+    if (endColorIndex >= numColors) {
+        endColorIndex = numColors - 1;
     }
 
-    function getColorForSpeed(speed) {
-        for (let i = 0; i < colors.length - 1; i++) {
-            const start = colors[i];
-            const end = colors[i + 1];
-            if (speed <= end.stop) {
-                const factor = (speed - start.stop) / (end.stop - start.stop);
-                const [r, g, b] = interpolateColor(start.color, end.color, factor);
-                return `rgb(${r}, ${g}, ${b})`;
-            }
-        }
+    const factor = (speed % segment) / segment;
+    const [r, g, b] = interpolateColor(colors[startColorIndex], colors[endColorIndex], factor);
 
-        return `rgb(${colors[colors.length - 1].color.join(', ')})`;
-    }
-
-    if (speed > maxSpeed) speed = maxSpeed;
-    return getColorForSpeed(speed);
+    return `rgb(${r}, ${g}, ${b})`;
 }
 
 function initializePath(strokeColor) {
@@ -88,7 +87,7 @@ function updateMapCenter() {
 
         // If GPSON is 1, add new position to the route
         if (GPSON === 1) {
-            const strokeColor = getStrokeColorBasedOnSpeed(SPEED);
+            const strokeColor = getRainbowColorForSpeed(SPEED);
 
             // If the path color has changed or a new path is needed, start a new segment
             if (!currentPath || strokeColor !== currentColor) {
