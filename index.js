@@ -3,9 +3,9 @@ let marker;
 let currentPath;
 let currentColor;
 let pathCoordinates = [];
-let LAT;  
-let LON; 
-let SPEED;
+let LAT = 0;  // Initialize with default value
+let LON = 0;  // Initialize with default value
+let SPEED = 0;  // Initialize with default value
 let DELETE;
 let GPSON = 0; // Assuming this variable is defined elsewhere
 let lastPosition = null; // To store the last known position when GPSON is 1
@@ -30,17 +30,40 @@ function initMap() {
 }
 
 function getStrokeColorBasedOnSpeed(speed) {
-    if (speed <= 20) {
-        return '#0000FF'; // Blue
-    } else if (speed <= 40) {
-        return '#008000'; // Green
-    } else if (speed <= 60) {
-        return '#FF0000'; // Red
-    } else if (speed <= 80) {
-        return '#800080'; // Purple
-    } else {
-        return '#000000'; // Black
+    const maxSpeed = 100;
+
+    const colors = [
+        { stop: 0, color: [0, 0, 255] },     // Blue
+        { stop: 20, color: [0, 128, 0] },    // Green
+        { stop: 40, color: [255, 0, 0] },    // Red
+        { stop: 60, color: [128, 0, 128] },  // Purple
+        { stop: 80, color: [0, 0, 0] }       // Black
+    ];
+
+    function interpolateColor(color1, color2, factor) {
+        return [
+            Math.round(color1[0] + factor * (color2[0] - color1[0])),
+            Math.round(color1[1] + factor * (color2[1] - color1[1])),
+            Math.round(color1[2] + factor * (color2[2] - color1[2]))
+        ];
     }
+
+    function getColorForSpeed(speed) {
+        for (let i = 0; i < colors.length - 1; i++) {
+            const start = colors[i];
+            const end = colors[i + 1];
+            if (speed <= end.stop) {
+                const factor = (speed - start.stop) / (end.stop - start.stop);
+                const [r, g, b] = interpolateColor(start.color, end.color, factor);
+                return `rgb(${r}, ${g}, ${b})`;
+            }
+        }
+
+        return `rgb(${colors[colors.length - 1].color.join(', ')})`;
+    }
+
+    if (speed > maxSpeed) speed = maxSpeed;
+    return getColorForSpeed(speed);
 }
 
 function initializePath(strokeColor) {
@@ -105,7 +128,7 @@ function updateMapCenter() {
 
 function displaySpeedMarker(position, speed) {
     const marker = new google.maps.Marker({
-        position: { lat: position.lat, lng: position.lng}, // Adjusting the position slightly to the right
+        position: { lat: position.lat, lng: position.lng }, // Marker at position
         map: map,
         icon: {
             path: google.maps.SymbolPath.CIRCLE, // Default marker shape
@@ -121,9 +144,6 @@ function displaySpeedMarker(position, speed) {
     });
     speedMarkers.push(marker); // Store the marker so we can clear it later
 }
-
-
-
 
 function clearSpeedMarkers() {
     // Remove all speed markers from the map
