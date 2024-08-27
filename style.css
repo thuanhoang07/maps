@@ -3,17 +3,3 @@
     width: 100%;
 }
 
-/* Add the speed label styling */
-.speed-label {
-    background-color: white;
-    padding: 2px 4px; /* Adjust padding to match the larger font size */
-    border-radius: 3px; /* Slightly larger border radius */
-    border: 1px solid black;
-    font-family: Arial, sans-serif;
-    text-align: center;
-    display: inline-block;
-    font-size: 10px; /* Set the font size to 10px */
-    font-weight: bold; /* Keep the text bold for visibility */
-    line-height: 1.2; /* Adjust line height for better readability with larger text */
-}
-
