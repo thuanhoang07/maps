@@ -38,7 +38,16 @@
         configLON = configuration.realtime_configs[1];
         configGPSON = configuration.realtime_configs[2];
         configSPEED = configuration.realtime_configs[3];
+
+
         console.log("Configuration Loaded:", configuration);
+
+        eraWidget.requestHistories(
+         new Date().getTime() - 1000 * 60 * 60 * 1,
+         new Date().getTime()
+        )
+        console.log("requestHistories:", requestHistories);
+
     });
 
     eraWidget.onValues((values) => {
@@ -60,6 +69,18 @@
             console.log("Value SPEED:", SPEED);
         }
     });
+
+    eraWidget.onHistories((histories) => {
+      
+      console.log("onHistories", onHistories);
+
+    });
+
+
+
+
+
+
     eraWidget.ready();
 </script> 
 </body>
