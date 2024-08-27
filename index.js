@@ -105,7 +105,7 @@ function updateMapCenter() {
 
 function displaySpeedMarker(position, speed) {
     const marker = new google.maps.Marker({
-        position: { lat: position.lat + 0.002, lng: position.lng + 0.002 }, // Adjusting the position slightly to the right
+        position: { lat: position.lat, lng: position.lng}, // Adjusting the position slightly to the right
         map: map,
         icon: {
             path: google.maps.SymbolPath.CIRCLE, // Default marker shape
