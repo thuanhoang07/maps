@@ -38,17 +38,15 @@
         configLON = configuration.realtime_configs[1];
         configGPSON = configuration.realtime_configs[2];
         configSPEED = configuration.realtime_configs[3];
-
-
         console.log("Configuration Loaded:", configuration);
 
-        eraWidget.requestHistories(
+    });
+
+    eraWidget.requestHistories( 
          new Date().getTime() - 1000 * 60 * 60 * 24,
          new Date().getTime()
         )
-        console.log("requestHistories:", requestHistories);
-
-    });
+    console.log("requestHistories:", requestHistories);
 
     eraWidget.onValues((values) => {
         console.log("Value:", values);
@@ -74,12 +72,6 @@
       console.log("onHistories", onHistories);
     });
     
-
-
-
-
-
-
     eraWidget.ready();
     eraWidget.requestAdjustMobileHeight(500);
 </script> 
