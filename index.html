@@ -33,12 +33,20 @@
     let configGPSON = null;
     let configSPEED = null;
     
+    let configLAT_his = null;
+    let configLON_his = null;
+    let LAT_his_Array = [];
+    let LON_his_Array = [];
+
+
     eraWidget.onConfiguration((configuration) => {
         configLAT = configuration.realtime_configs[0];
         configLON = configuration.realtime_configs[1];
         configGPSON = configuration.realtime_configs[2];
         configSPEED = configuration.realtime_configs[3];
 
+        configLAT_his = configuration.history_configs[0];
+        configLON_his = configuration.history_configs[1];
         console.log("Configuration Loaded:", configuration);
     });
 
@@ -47,8 +55,13 @@
         new Date().getTime()
     );
     
-    eraWidget.onHistories((histories) => {
+    eraWidget.onHistories((histories) => { 
         console.log("onHistories:", histories);
+
+        LAT_his_Array = histories[0].Date;
+        console.log("LAT_his_Array:", LAT_his_Array);
+        LON_his_Array = histories[1].Date;
+        console.log("LON_his_Array:", LON_his_Array);
     });
 
     eraWidget.onValues((values) => {
