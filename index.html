@@ -33,8 +33,6 @@
     let configGPSON = null;
     let configSPEED = null;
     
-    let configLAT_his = null;
-    let configLON_his = null;
     let LAT_his_Array = [];
     let LON_his_Array = [];
 
@@ -44,9 +42,6 @@
         configLON = configuration.realtime_configs[1];
         configGPSON = configuration.realtime_configs[2];
         configSPEED = configuration.realtime_configs[3];
-
-        configLAT_his = configuration.history_configs[0];
-        configLON_his = configuration.history_configs[1];
         console.log("Configuration Loaded:", configuration);
     });
 
