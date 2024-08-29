@@ -7,76 +7,83 @@
 
     <!-- Load the Google Maps API -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBRr6PMgMCG4GrlhCbO_wp466zIhddRJlg&callback=initMap"
-            async defer></script>
+            defer></script>
 
- 
-    <script src="index.js"></script>
+    <!-- Custom JavaScript and CSS -->
+    <script src="index.js" defer></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div id="map"></div>
-
 <p id="directions"></p> 
 
-
-
-<script src="https://www.unpkg.com/@eohjsc/era-widget@1.0.14/src/index.js"></script>
+<!-- E-Ra Widget Script -->
+<script src="https://www.unpkg.com/@eohjsc/era-widget@1.1.1/src/index.js" defer></script>
 
 <script>
-    const eraWidget = new EraWidget();
-    let configLAT = null;
-    let configLON = null;
-    let configGPSON = null;
-    let configSPEED = null;
-    
-    let LAT_his_Array = [];
-    let LON_his_Array = [];
+    function initMap() {
+        // Initialize the Google Map here
+        const map = new google.maps.Map(document.getElementById('map'), {
+            center: { lat: 0, lng: 0 },
+            zoom: 2
+        });
 
+        // Additional map logic can be added here
+    }
 
-    eraWidget.onConfiguration((configuration) => {
-        configLAT = configuration.realtime_configs[0];
-        configLON = configuration.realtime_configs[1];
-        configGPSON = configuration.realtime_configs[2];
-        configSPEED = configuration.realtime_configs[3];
-        console.log("Configuration Loaded:", configuration);
+    document.addEventListener('DOMContentLoaded', function() {
+        // Khởi tạo biến để lưu trữ các cấu hình và dữ liệu lịch sử
+        let configLAT = null;
+        let configLON = null;
+        let configGPSON = null;
+        let configSPEED = null;
+        let LAT_his_Array = [];
+        let LON_his_Array = [];
+
+        // Khởi tạo EraWidget và thiết lập các callback
+        const eraWidget = new EraWidget();
+        eraWidget.init({
+            onConfiguration: (configuration) => {
+                configLAT = configuration.realtime_configs[0];
+                configLON = configuration.realtime_configs[1];
+                configGPSON = configuration.realtime_configs[2];
+                configSPEED = configuration.realtime_configs[3];
+                console.log("Configuration Loaded:", configuration);
+            },
+            onHistory: (history) => {
+                console.log("History:", history);
+                LAT_his_Array = history[0].data;
+                LON_his_Array = history[1].data;
+                console.log("LAT_his_Array:", LAT_his_Array);
+                console.log("LON_his_Array:", LON_his_Array);
+            },
+            onValues: (values) => {
+                console.log("Value:", values);
+                if (configLAT && values[configLAT.id]) {
+                    const LAT = values[configLAT.id].value;
+                    console.log("Value LAT:", LAT);
+                }
+                if (configLON && values[configLON.id]) {
+                    const LON = values[configLON.id].value;
+                    console.log("Value LON:", LON);
+                }
+                if (configGPSON && values[configGPSON.id]) {
+                    const GPSON = values[configGPSON.id].value;
+                    console.log("Value GPSON:", GPSON);
+                }
+                if (configSPEED && values[configSPEED.id]) {
+                    const SPEED = values[configSPEED.id].value;
+                    console.log("Value SPEED:", SPEED);
+                }
+            }
+        });
+
+        // Yêu cầu dữ liệu lịch sử sau khi widget đã được khởi tạo
+        const startTime = new Date().getTime() - 1000 * 60 * 60 * 24; // 24 hours ago
+        const endTime = new Date().getTime(); // Current time
+        eraWidget.requestHistories(startTime, endTime);
     });
-
-    eraWidget.requestHistories( 
-        new Date().getTime() - 1000 * 60 * 60 * 24,
-        new Date().getTime()
-    );
-    
-    eraWidget.onHistories((histories) => { 
-        console.log("onHistories:", histories);
-        LAT_his_Array = histories[0].data;
-        console.log("LAT_his_Array:", LAT_his_Array);
-        LON_his_Array = histories[1].data;
-        console.log("LON_his_Array:", LON_his_Array);
-    });
-
-    eraWidget.onValues((values) => {
-        console.log("Value:", values);
-        if (configLAT && values[configLAT.id]) {
-            LAT = values[configLAT.id].value;
-            console.log("Value LAT:", LAT);
-        }
-        if (configLON && values[configLON.id]) {
-            LON = values[configLON.id].value;
-            console.log("Value LON:", LON);
-        }
-        if (configGPSON && values[configGPSON.id]) {
-            GPSON = values[configGPSON.id].value;
-            console.log("Value GPSON:", GPSON);
-        }
-        if (configSPEED && values[configSPEED.id]) {
-            SPEED = values[configSPEED.id].value;
-            console.log("Value SPEED:", SPEED);
-        }
-    });
-
-    eraWidget.ready();
-    eraWidget.requestAdjustMobileHeight(500);
 </script>
 
 </body>

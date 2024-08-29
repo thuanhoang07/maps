@@ -11,20 +11,21 @@ let GPSON = 0; // Assuming this variable is defined elsewhere
 let lastPosition = null; // To store the last known position when GPSON is 1
 
 function initMap() {
+    // Initialize the map with the default or current LAT/LON values
     const options = {
         zoom: 14,
         center: { lat: LAT, lng: LON }
     };
 
-    // Initialize the map
     map = new google.maps.Map(document.getElementById('map'), options);
 
-    // Place initial marker
+    // Place initial marker on the map
     marker = new google.maps.Marker({
         position: { lat: LAT, lng: LON },
         map: map
     });
-    // Update map and marker coordinates every second
+
+    // Start the interval to update the map center and marker position
     setInterval(updateMapCenter, 1000);
 }
 
@@ -85,20 +86,15 @@ function updateMapCenter() {
         // Update the marker's position
         marker.setPosition(newCenter);
 
-        // If GPSON is 1, add new position to the route
         if (GPSON === 1) {
             const strokeColor = getRainbowColorForSpeed(SPEED);
 
-            // If the path color has changed or a new path is needed, start a new segment
+            // Start a new path segment if needed
             if (!currentPath || strokeColor !== currentColor) {
                 if (pathCoordinates.length > 0) {
                     currentPath.setPath(pathCoordinates); // Finalize the previous segment
                 }
-                if (lastPosition) {
-                    pathCoordinates = [lastPosition]; // Start the new segment with the last point
-                } else {
-                    pathCoordinates = [];
-                }
+                pathCoordinates = lastPosition ? [lastPosition] : [];
                 currentColor = strokeColor;
                 initializePath(strokeColor);
             }
@@ -110,12 +106,11 @@ function updateMapCenter() {
             // Update the last position
             lastPosition = newCenter;
         } else {
-            // If GPSON is 0, finalize the current path segment
+            // Finalize the current path segment if GPSON is 0
             if (currentPath) {
                 currentPath.setPath(pathCoordinates);
             }
-            // Reset last position when GPSON is turned off
-            lastPosition = null;
+            lastPosition = null; // Reset last position when GPSON is turned off
         }
     }
 }
