@@ -55,13 +55,10 @@
         new Date().getTime()
     );
     
-    <!-- eraWidget.onHistories((histories) => { 
+    eraWidget.onHistories((histories) => { 
         console.log("onHistories:", histories);
-        LAT_his_Array = histories[0].data;
-        console.log("LAT_his_Array:", LAT_his_Array);
-        LON_his_Array = histories[1].data;
-        console.log("LON_his_Array:", LON_his_Array);
-    }); -->
+        
+    });
 
     eraWidget.onValues((values) => {
         console.log("Value:", values);
