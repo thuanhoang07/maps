@@ -3,14 +3,15 @@ let marker;
 let currentPath;
 let currentColor;
 let pathCoordinates = [];
-let LAT = 0; 
-let LON = 0;  
-let SPEED = 0; 
-
-let GPSON = 0; 
-let lastPosition = null; 
+let LAT = 0;  // Initialize with default value
+let LON = 0;  // Initialize with default value
+let SPEED = 0;  // Initialize with default value
+let DELETE;
+let GPSON = 0; // Assuming this variable is defined elsewhere
+let lastPosition = null; // To store the last known position when GPSON is 1
 
 function initMap() {
+    // Initialize the map with the default or current LAT/LON values
     const options = {
         zoom: 14,
         center: { lat: LAT, lng: LON }
@@ -18,11 +19,13 @@ function initMap() {
 
     map = new google.maps.Map(document.getElementById('map'), options);
 
+    // Place initial marker on the map
     marker = new google.maps.Marker({
         position: { lat: LAT, lng: LON },
         map: map
     });
 
+    // Start the interval to update the map center and marker position
     setInterval(updateMapCenter, 1000);
 }
 
@@ -47,7 +50,8 @@ function getRainbowColorForSpeed(speed) {
 
     const numColors = colors.length;
     const maxSpeed = 100;
-    const segment = maxSpeed / (numColors - 1); 
+    const segment = maxSpeed / (numColors - 1); // Divide speed into segments based on color range
+
     let startColorIndex = Math.floor(speed / segment);
     let endColorIndex = startColorIndex + 1;
 
@@ -58,7 +62,7 @@ function getRainbowColorForSpeed(speed) {
     const factor = (speed % segment) / segment;
     const [r, g, b] = interpolateColor(colors[startColorIndex], colors[endColorIndex], factor);
 
-    return `rgb(${r}, ${g}, ${b})`;
+    return rgb(${r}, ${g}, ${b});
 }
 
 function initializePath(strokeColor) {
@@ -76,31 +80,37 @@ function updateMapCenter() {
     if (LAT && LON) {
         const newCenter = { lat: parseFloat(LAT), lng: parseFloat(LON) };
 
+        // Update the map's center position
         map.setCenter(newCenter);
 
+        // Update the marker's position
         marker.setPosition(newCenter);
 
         if (GPSON === 1) {
             const strokeColor = getRainbowColorForSpeed(SPEED);
 
+            // Start a new path segment if needed
             if (!currentPath || strokeColor !== currentColor) {
                 if (pathCoordinates.length > 0) {
-                    currentPath.setPath(pathCoordinates); 
+                    currentPath.setPath(pathCoordinates); // Finalize the previous segment
                 }
                 pathCoordinates = lastPosition ? [lastPosition] : [];
                 currentColor = strokeColor;
                 initializePath(strokeColor);
             }
 
+            // Add the new point to the current path
             pathCoordinates.push(newCenter);
-            currentPath.setPath(pathCoordinates); 
-
+            currentPath.setPath(pathCoordinates); // Update the path with the new coordinates
+            
+            // Update the last position
             lastPosition = newCenter;
         } else {
+            // Finalize the current path segment if GPSON is 0
             if (currentPath) {
                 currentPath.setPath(pathCoordinates);
             }
-            lastPosition = null; 
+            lastPosition = null; // Reset last position when GPSON is turned off
         }
     }
 }
