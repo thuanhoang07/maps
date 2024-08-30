@@ -47,8 +47,7 @@ function getRainbowColorForSpeed(speed) {
 
     const numColors = colors.length;
     const maxSpeed = 100;
-    const segment = maxSpeed / (numColors - 1); // Divide speed into segments based on color range
-
+    const segment = maxSpeed / (numColors - 1); 
     let startColorIndex = Math.floor(speed / segment);
     let endColorIndex = startColorIndex + 1;
 
@@ -77,37 +76,31 @@ function updateMapCenter() {
     if (LAT && LON) {
         const newCenter = { lat: parseFloat(LAT), lng: parseFloat(LON) };
 
-        // Update the map's center position
         map.setCenter(newCenter);
 
-        // Update the marker's position
         marker.setPosition(newCenter);
 
         if (GPSON === 1) {
             const strokeColor = getRainbowColorForSpeed(SPEED);
 
-            // Start a new path segment if needed
             if (!currentPath || strokeColor !== currentColor) {
                 if (pathCoordinates.length > 0) {
-                    currentPath.setPath(pathCoordinates); // Finalize the previous segment
+                    currentPath.setPath(pathCoordinates); 
                 }
                 pathCoordinates = lastPosition ? [lastPosition] : [];
                 currentColor = strokeColor;
                 initializePath(strokeColor);
             }
 
-            // Add the new point to the current path
             pathCoordinates.push(newCenter);
-            currentPath.setPath(pathCoordinates); // Update the path with the new coordinates
-            
-            // Update the last position
+            currentPath.setPath(pathCoordinates); 
+
             lastPosition = newCenter;
         } else {
-            // Finalize the current path segment if GPSON is 0
             if (currentPath) {
                 currentPath.setPath(pathCoordinates);
             }
-            lastPosition = null; // Reset last position when GPSON is turned off
+            lastPosition = null; 
         }
     }
 }
