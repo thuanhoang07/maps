@@ -3,15 +3,25 @@ let marker;
 let currentPath;
 let currentColor;
 let pathCoordinates = [];
-let LAT = 0;  // Initialize with default value
-let LON = 0;  // Initialize with default value
-let SPEED = 0;  // Initialize with default value
-let DELETE;
-let GPSON = 0; // Assuming this variable is defined elsewhere
-let lastPosition = null; // To store the last known position when GPSON is 1
+let LAT = 0; 
+let LON = 0;  
+let SPEED = 0; 
+
+let GPSON = 0; 
+let lastPosition = null; 
+
+
+document.getElementById('button1').addEventListener('click', function() {
+    document.getElementById('map').style.display = 'block'; // Hiển thị bản đồ khi nhấn Phím 1
+    initMap(); // Khởi tạo bản đồ và các chức năng
+});
+
+document.getElementById('button2').addEventListener('click', function() {
+    document.getElementById('map').style.display = 'none'; // Ẩn bản đồ khi nhấn Phím 2
+});
+
 
 function initMap() {
-    // Initialize the map with the default or current LAT/LON values
     const options = {
         zoom: 14,
         center: { lat: LAT, lng: LON }
@@ -19,13 +29,11 @@ function initMap() {
 
     map = new google.maps.Map(document.getElementById('map'), options);
 
-    // Place initial marker on the map
     marker = new google.maps.Marker({
         position: { lat: LAT, lng: LON },
         map: map
     });
 
-    // Start the interval to update the map center and marker position
     setInterval(updateMapCenter, 1000);
 }
 
