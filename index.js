@@ -62,7 +62,7 @@ function getRainbowColorForSpeed(speed) {
     const factor = (speed % segment) / segment;
     const [r, g, b] = interpolateColor(colors[startColorIndex], colors[endColorIndex], factor);
 
-    return rgb(${r}, ${g}, ${b});
+    return `rgb(${r}, ${g}, ${b})`;
 }
 
 function initializePath(strokeColor) {
