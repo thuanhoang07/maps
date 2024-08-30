@@ -10,17 +10,6 @@ let SPEED = 0;
 let GPSON = 0; 
 let lastPosition = null; 
 
-
-document.getElementById('button1').addEventListener('click', function() {
-    document.getElementById('map').style.display = 'block'; // Hiển thị bản đồ khi nhấn Phím 1
-    initMap(); // Khởi tạo bản đồ và các chức năng
-});
-
-document.getElementById('button2').addEventListener('click', function() {
-    document.getElementById('map').style.display = 'none'; // Ẩn bản đồ khi nhấn Phím 2
-});
-
-
 function initMap() {
     const options = {
         zoom: 14,
