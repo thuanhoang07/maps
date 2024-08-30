@@ -32,7 +32,8 @@
     
     let LAT_his_Array = [];
     let LON_his_Array = [];
-
+    let LAT_his_Array_all = [];
+    let LON_his_Array_all = [];
 
     eraWidget.onConfiguration((configuration) => {
         configLAT = configuration.realtime_configs[0];
@@ -49,10 +50,16 @@
     
     eraWidget.onHistories((histories) => { 
         console.log("onHistories:", histories);
-        LAT_his_Array = histories[0].data;
+
+        LAT_his_Array_all = histories[0].data;
         console.log("LAT_his_Array:", LAT_his_Array);
-        LON_his_Array = histories[1].data;
+        LON_his_Array_all = histories[1].data;
         console.log("LON_his_Array:", LON_his_Array);
+
+        LAT_his_Array = histories[0].data.map(item => item.y);
+        console.log("LAT_his_Array (y values):", LAT_his_Array);
+        LON_his_Array = histories[1].data.map(item => item.y);
+        console.log("LON_his_Array (y values):", LON_his_Array);
     });
 
     eraWidget.onValues((values) => {
