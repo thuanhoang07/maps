@@ -37,13 +37,10 @@
     let configSPEED = null;
     let currentView = "maps"; // Mặc định là maps
 
-    let LAT_his_Array = [];
-    let LON_his_Array = [];
     let LAT_his_Array_all = [];
     let LON_his_Array_all = [];
-    let LAT_his_Array_all_including0 = [];
-    let LON_his_Array_all_including0 = [];
-
+    let GPSON_his_Array = [];
+    let pathCoordinatesHistory = [];
 
     // Thiết lập mặc định là chế độ Maps khi trang web được tải
     window.onload = function() {
@@ -54,9 +51,9 @@
         currentView = document.getElementById("viewSelector").value;
 
         if (currentView === "history") {
-            console.log("History mode selected. Map updates paused.");
-            clearInterval(updateInterval); // Dừng cập nhật bản đồ
-            document.getElementById("map").style.display = "none"; // Ẩn bản đồ
+            console.log("History mode selected. Drawing historical path.");
+            clearInterval(updateInterval); // Dừng cập nhật bản đồ hiện tại
+            drawHistoryPath(); // Vẽ lại đường đi từ dữ liệu lịch sử
         } else if (currentView === "maps") {
             console.log("Maps mode selected. Resuming map updates.");
             document.getElementById("map").style.display = "block"; // Hiển thị bản đồ
@@ -80,26 +77,26 @@
     eraWidget.onHistories((histories) => { 
         console.log("onHistories:", histories);
 
-        LAT_his_Array_all_including0 = histories[0].data;
-        console.log("LAT_his_Array_all_including0:", LAT_his_Array_all_including0);
-        LON_his_Array_all_including0 = histories[1].data;
-        console.log("LON_his_Array_all_including0:", LON_his_Array_all_including0);
+        // Lưu lại giá trị lịch sử của LAT, LON và GPSON
+        LAT_his_Array_all = histories[0].data;
+        LON_his_Array_all = histories[1].data;
+        GPSON_his_Array = histories[2].data;
 
-        LAT_his_Array_all = histories[0].data
-            .filter(item => item.y !== null && item.y !== 0);
         console.log("LAT_his_Array_all:", LAT_his_Array_all);
-        LON_his_Array_all = histories[1].data
-            .filter(item => item.y !== null && item.y !== 0);
         console.log("LON_his_Array_all:", LON_his_Array_all);
+        console.log("GPSON_his_Array:", GPSON_his_Array);
 
-        LAT_his_Array = histories[0].data
-            .map(item => item.y)
-            .filter(y => y !== null && y !== 0);
-        console.log("LAT_his_Array (y values, non-zero):", LAT_his_Array);
-        LON_his_Array = histories[1].data
-            .map(item => item.y)
-            .filter(y => y !== null && y !== 0);
-        console.log("LON_his_Array (y values, non-zero):", LON_his_Array);
+        // Lọc chỉ lấy những điểm khi GPSON = 1
+        pathCoordinatesHistory = LAT_his_Array_all
+            .map((latItem, index) => {
+                if (GPSON_his_Array[index].y === 1) {
+                    return { lat: latItem.y, lng: LON_his_Array_all[index].y };
+                }
+                return null;
+            })
+            .filter(coord => coord !== null);
+
+        console.log("pathCoordinatesHistory:", pathCoordinatesHistory);
     });
 
     eraWidget.onValues((values) => {
@@ -129,13 +126,6 @@
     let map;
     let marker;
     let currentPath;
-    let currentColor;
-    let pathCoordinates = [];
-    let LAT = 0;  
-    let LON = 0;  
-    let SPEED = 0;  
-    let GPSON = 0;
-    let lastPosition = null; 
     let updateInterval;
 
     function initMap() {
@@ -157,13 +147,10 @@
     }
 
     function updateMapCenter() {
-        if (currentView !== "maps") return; // Chỉ cập nhật nếu là chế độ maps
-
         if (LAT && LON) {
             const newCenter = { lat: parseFloat(LAT), lng: parseFloat(LON) };
 
             map.setCenter(newCenter);
-
             marker.setPosition(newCenter);
 
             if (GPSON === 1) {
@@ -188,6 +175,27 @@
                 }
                 lastPosition = null; 
             }
+        }
+    }
+
+    function drawHistoryPath() {
+        if (pathCoordinatesHistory.length > 0) {
+            const options = {
+                zoom: 14,
+                center: pathCoordinatesHistory[0]
+            };
+
+            map = new google.maps.Map(document.getElementById('map'), options);
+
+            const historyPath = new google.maps.Polyline({
+                path: pathCoordinatesHistory,
+                geodesic: true,
+                strokeColor: "#FF0000", // Màu đỏ cho đường lịch sử
+                strokeOpacity: 1.0,
+                strokeWeight: 4
+            });
+
+            historyPath.setMap(map);
         }
     }
 
