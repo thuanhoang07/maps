@@ -37,6 +37,7 @@
     let configSPEED = null;
     let currentView = "maps"; // Mặc định là maps
 
+    
     let LAT_his_Array = [];
     let LON_his_Array = [];
     let LAT_his_Array_all = [];
@@ -198,7 +199,8 @@
             Math.round(color1[2] + factor * (color2[2] - color1[2]))
         ];
     }
-
+ 
+    
     function getRainbowColorForSpeed(speed) {
         const colors = [
             [255, 0, 0],    // Red
