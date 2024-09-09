@@ -51,10 +51,19 @@
     eraWidget.onHistories((histories) => { 
         console.log("onHistories:", histories);
 
-        LAT_his_Array_all = histories[0].data.filter(y => y !== null && y !== 0);
+        // LAT_his_Array_all = histories[0].data;
+        // console.log("LAT_his_Array:", LAT_his_Array_all);
+        // LON_his_Array_all = histories[1].data;
+        // console.log("LON_his_Array:", LON_his_Array_all);
+
+        LAT_his_Array_all = histories[0].data
+            .filter(item => item.y !== null && item.y !== 0);
         console.log("LAT_his_Array:", LAT_his_Array_all);
-        LON_his_Array_all = histories[1].data.filter(y => y !== null && y !== 0);
+
+        LON_his_Array_all = histories[1].data
+            .filter(item => item.y !== null && item.y !== 0);
         console.log("LON_his_Array:", LON_his_Array_all);
+
 
 
         LAT_his_Array = histories[0].data
