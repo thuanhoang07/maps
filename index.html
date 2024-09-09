@@ -9,17 +9,23 @@
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBRr6PMgMCG4GrlhCbO_wp466zIhddRJlg&callback=initMap"
             async defer></script>
 
- 
     <script src="index.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+<!-- Menu lựa chọn giữa Maps và History -->
+<div>
+    <select id="viewSelector" onchange="handleViewChange()">
+        <option value="maps">Maps</option>
+        <option value="history">History</option>
+    </select>
+</div>
+
+<!-- Map container -->
 <div id="map"></div>
 
 <p id="directions"></p> 
-
-
 
 <script src="https://www.unpkg.com/@eohjsc/era-widget@1.0.14/src/index.js"></script>
 
@@ -29,11 +35,26 @@
     let configLON = null;
     let configGPSON = null;
     let configSPEED = null;
-    
+    let currentView = "maps"; // Mặc định là maps
+
     let LAT_his_Array = [];
     let LON_his_Array = [];
     let LAT_his_Array_all = [];
     let LON_his_Array_all = [];
+
+    function handleViewChange() {
+        currentView = document.getElementById("viewSelector").value;
+
+        if (currentView === "history") {
+            console.log("History mode selected. Map updates paused.");
+            clearInterval(updateInterval); // Dừng cập nhật bản đồ
+            document.getElementById("map").style.display = "none"; // Ẩn bản đồ
+        } else if (currentView === "maps") {
+            console.log("Maps mode selected. Resuming map updates.");
+            document.getElementById("map").style.display = "block"; // Hiển thị bản đồ
+            initMap(); // Khởi tạo lại bản đồ
+        }
+    }
 
     eraWidget.onConfiguration((configuration) => {
         configLAT = configuration.realtime_configs[0];
@@ -50,11 +71,6 @@
     
     eraWidget.onHistories((histories) => { 
         console.log("onHistories:", histories);
-
-        // LAT_his_Array_all = histories[0].data;
-        // console.log("LAT_his_Array:", LAT_his_Array_all);
-        // LON_his_Array_all = histories[1].data;
-        // console.log("LON_his_Array:", LON_his_Array_all);
 
         LAT_his_Array_all = histories[0].data
             .filter(item => item.y !== null && item.y !== 0);
@@ -97,6 +113,127 @@
 
     eraWidget.ready();
 </script>
+
+<script>
+    let map;
+    let marker;
+    let currentPath;
+    let currentColor;
+    let pathCoordinates = [];
+    let LAT = 0;  
+    let LON = 0;  
+    let SPEED = 0;  
+    let GPSON = 0;
+    let lastPosition = null; 
+    let updateInterval;
+
+    function initMap() {
+        if (currentView !== "maps") return; // Nếu không phải chế độ maps thì thoát
+
+        const options = {
+            zoom: 14,
+            center: { lat: LAT, lng: LON }
+        };
+
+        map = new google.maps.Map(document.getElementById('map'), options);
+
+        marker = new google.maps.Marker({
+            position: { lat: LAT, lng: LON },
+            map: map
+        });
+
+        updateInterval = setInterval(updateMapCenter, 1000);
+    }
+
+    function updateMapCenter() {
+        if (currentView !== "maps") return; // Chỉ cập nhật nếu là chế độ maps
+
+        if (LAT && LON) {
+            const newCenter = { lat: parseFloat(LAT), lng: parseFloat(LON) };
+
+            map.setCenter(newCenter);
+
+            marker.setPosition(newCenter);
+
+            if (GPSON === 1) {
+                const strokeColor = getRainbowColorForSpeed(SPEED);
+
+                if (!currentPath || strokeColor !== currentColor) {
+                    if (pathCoordinates.length > 0) {
+                        currentPath.setPath(pathCoordinates); 
+                    }
+                    pathCoordinates = lastPosition ? [lastPosition] : [];
+                    currentColor = strokeColor;
+                    initializePath(strokeColor);
+                }
+
+                pathCoordinates.push(newCenter);
+                currentPath.setPath(pathCoordinates); 
+                
+                lastPosition = newCenter;
+            } else {
+                if (currentPath) {
+                    currentPath.setPath(pathCoordinates);
+                }
+                lastPosition = null; 
+            }
+        }
+    }
+
+    function initializePath(strokeColor) {
+        currentPath = new google.maps.Polyline({
+            path: [],
+            geodesic: true,
+            strokeColor: strokeColor,
+            strokeOpacity: 1.0,
+            strokeWeight: 4
+        });
+        currentPath.setMap(map);
+    }
+
+    function interpolateColor(color1, color2, factor) {
+        return [
+            Math.round(color1[0] + factor * (color2[0] - color1[0])),
+            Math.round(color1[1] + factor * (color2[1] - color1[1])),
+            Math.round(color1[2] + factor * (color2[2] - color1[2]))
+        ];
+    }
+
+    function getRainbowColorForSpeed(speed) {
+        const colors = [
+            [255, 0, 0],    // Red
+            [255, 165, 0],  // Orange
+            [255, 255, 0],  // Yellow
+            [0, 255, 0],    // Green
+            [0, 0, 255],    // Blue
+            [75, 0, 130],   // Indigo
+            [238, 130, 238] // Violet
+        ];
+
+        const numColors = colors.length;
+        const maxSpeed = 100;
+        const segment = maxSpeed / (numColors - 1); 
+
+        let startColorIndex = Math.floor(speed / segment);
+        let endColorIndex = startColorIndex + 1;
+
+        if (endColorIndex >= numColors) {
+            endColorIndex = numColors - 1;
+        }
+
+        const factor = (speed % segment) / segment;
+        const [r, g, b] = interpolateColor(colors[startColorIndex], colors[endColorIndex], factor);
+
+        return `rgb(${r}, ${g}, ${b})`;
+    }
+</script>
+
+<style>
+    #map {
+        height: 700px;
+        width: 100%;
+    }
+</style>
 
 </body>
 </html>
