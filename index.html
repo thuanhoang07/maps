@@ -41,6 +41,9 @@
     let LON_his_Array = [];
     let LAT_his_Array_all = [];
     let LON_his_Array_all = [];
+    let LAT_his_Array_all_including0 = [];
+    let LON_his_Array_all_including0 = [];
+
 
     // Thiết lập mặc định là chế độ Maps khi trang web được tải
     window.onload = function() {
@@ -77,19 +80,22 @@
     eraWidget.onHistories((histories) => { 
         console.log("onHistories:", histories);
 
+        LAT_his_Array_all_including0 = histories[0].data;
+        console.log("LAT_his_Array_all_including0:", LAT_his_Array_all_including0);
+        LON_his_Array_all_including0 = histories[1].data;
+        console.log("LON_his_Array_all_including0:", LON_his_Array_all_including0);
+
         LAT_his_Array_all = histories[0].data
             .filter(item => item.y !== null && item.y !== 0);
-        console.log("LAT_his_Array:", LAT_his_Array_all);
-
+        console.log("LAT_his_Array_all:", LAT_his_Array_all);
         LON_his_Array_all = histories[1].data
             .filter(item => item.y !== null && item.y !== 0);
-        console.log("LON_his_Array:", LON_his_Array_all);
+        console.log("LON_his_Array_all:", LON_his_Array_all);
 
         LAT_his_Array = histories[0].data
             .map(item => item.y)
             .filter(y => y !== null && y !== 0);
         console.log("LAT_his_Array (y values, non-zero):", LAT_his_Array);
-
         LON_his_Array = histories[1].data
             .map(item => item.y)
             .filter(y => y !== null && y !== 0);
