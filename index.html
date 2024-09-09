@@ -61,6 +61,8 @@
 <script src="https://www.unpkg.com/@eohjsc/era-widget@1.0.14/src/index.js"></script>
 
 <script>
+    let isMapsMode = false;  // Track if the current mode is Maps
+
     // Google Maps initialization
     function initMap() {
         var mapOptions = {
@@ -82,77 +84,80 @@
     let LAT_his_Array_all = [];
     let LON_his_Array_all = [];
 
-    eraWidget.onConfiguration((configuration) => {
-        configLAT = configuration.realtime_configs[0];
-        configLON = configuration.realtime_configs[1];
-        configGPSON = configuration.realtime_configs[2];
-        configSPEED = configuration.realtime_configs[3];
-        console.log("Configuration Loaded:", configuration);
-    });
+    function setupEraWidget() {
+        eraWidget.onConfiguration((configuration) => {
+            configLAT = configuration.realtime_configs[0];
+            configLON = configuration.realtime_configs[1];
+            configGPSON = configuration.realtime_configs[2];
+            configSPEED = configuration.realtime_configs[3];
+            console.log("Configuration Loaded:", configuration);
+        });
 
-    eraWidget.requestHistories(
-        new Date().getTime() - 1000 * 60 * 60 * 24 * 30,
-        new Date().getTime()
-    );
+        eraWidget.requestHistories(
+            new Date().getTime() - 1000 * 60 * 60 * 24 * 30,
+            new Date().getTime()
+        );
 
-    eraWidget.onHistories((histories) => { 
-        console.log("onHistories:", histories);
+        eraWidget.onHistories((histories) => { 
+            console.log("onHistories:", histories);
 
-        LAT_his_Array_all = histories[0].data
-            .filter(item => item.y !== null && item.y !== 0);
-        console.log("LAT_his_Array:", LAT_his_Array_all);
+            LAT_his_Array_all = histories[0].data
+                .filter(item => item.y !== null && item.y !== 0);
+            console.log("LAT_his_Array:", LAT_his_Array_all);
 
-        LON_his_Array_all = histories[1].data
-            .filter(item => item.y !== null && item.y !== 0);
-        console.log("LON_his_Array:", LON_his_Array_all);
+            LON_his_Array_all = histories[1].data
+                .filter(item => item.y !== null && item.y !== 0);
+            console.log("LON_his_Array:", LON_his_Array_all);
 
-        LAT_his_Array = histories[0].data
-            .map(item => item.y)
-            .filter(y => y !== null && y !== 0);
-        console.log("LAT_his_Array (y values, non-zero):", LAT_his_Array);
+            LAT_his_Array = histories[0].data
+                .map(item => item.y)
+                .filter(y => y !== null && y !== 0);
+            console.log("LAT_his_Array (y values, non-zero):", LAT_his_Array);
 
-        LON_his_Array = histories[1].data
-            .map(item => item.y)
-            .filter(y => y !== null && y !== 0);
-        console.log("LON_his_Array (y values, non-zero):", LON_his_Array);
-    });
+            LON_his_Array = histories[1].data
+                .map(item => item.y)
+                .filter(y => y !== null && y !== 0);
+            console.log("LON_his_Array (y values, non-zero):", LON_his_Array);
+        });
 
-    eraWidget.onValues((values) => {
-        console.log("Value:", values);
-        if (configLAT && values[configLAT.id]) {
-            LAT = values[configLAT.id].value;
-            console.log("Value LAT:", LAT);
-        }
-        if (configLON && values[configLON.id]) {
-            LON = values[configLON.id].value;
-            console.log("Value LON:", LON);
-        }
-        if (configGPSON && values[configGPSON.id]) {
-            GPSON = values[configGPSON.id].value;
-            console.log("Value GPSON:", GPSON);
-        }
-        if (configSPEED && values[configSPEED.id]) {
-            SPEED = values[configSPEED.id].value;
-            console.log("Value SPEED:", SPEED);
-        }
-    });
+        eraWidget.onValues((values) => {
+            console.log("Value:", values);
+            if (configLAT && values[configLAT.id]) {
+                LAT = values[configLAT.id].value;
+                console.log("Value LAT:", LAT);
+            }
+            if (configLON && values[configLON.id]) {
+                LON = values[configLON.id].value;
+                console.log("Value LON:", LON);
+            }
+            if (configGPSON && values[configGPSON.id]) {
+                GPSON = values[configGPSON.id].value;
+                console.log("Value GPSON:", GPSON);
+            }
+            if (configSPEED && values[configSPEED.id]) {
+                SPEED = values[configSPEED.id].value;
+                console.log("Value SPEED:", SPEED);
+            }
+        });
 
-    eraWidget.ready();
+        eraWidget.ready();
+    }
 
     // Show Maps function when clicking the "Maps" button
     document.getElementById('mapsBtn').addEventListener('click', function() {
-        document.getElementById('mapContainer').style.display = 'block';
-        // Optionally, hide other sections (e.g., history section) if added later
-        // You can initialize the map again if needed:
-        // initMap();
+        if (!isMapsMode) {
+            document.getElementById('mapContainer').style.display = 'block';
+            initMap();  // Initialize the map
+            setupEraWidget();  // Start eraWidget functions
+            isMapsMode = true;  // Ensure functions don't repeat when re-clicked
+        }
     });
 
-    // Hide Maps function when clicking the "History" button
+    // When "History" is clicked, just hide the map container and do nothing
     document.getElementById('historyBtn').addEventListener('click', function() {
         document.getElementById('mapContainer').style.display = 'none';
-        // Hide maps and show history section here if applicable
+        // No further actions required
     });
-
 
 </script>
 
