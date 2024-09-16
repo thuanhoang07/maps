@@ -53,18 +53,17 @@
     }
 
     function handleViewChange() {
-        currentView = document.getElementById("viewSelector").value;
+    currentView = document.getElementById("viewSelector").value;
 
-        if (currentView === "history") {
-            console.log("History mode selected. Map updates paused.");
-            clearInterval(updateInterval); // Dừng cập nhật bản đồ
-            document.getElementById("map").style.display = "none"; // Ẩn bản đồ
-        } else if (currentView === "maps") {
-            console.log("Maps mode selected. Resuming map updates.");
-            document.getElementById("map").style.display = "block"; // Hiển thị bản đồ
-            initMap(); // Khởi tạo lại bản đồ
-        }
+    if (currentView === "history") {
+        console.log("History mode selected. Map updates continue but hidden.");
+        document.getElementById("map").style.visibility = "hidden"; // Ẩn bản đồ nhưng vẫn giữ hoạt động ngầm
+    } else if (currentView === "maps") {
+        console.log("Maps mode selected. Resuming map display.");
+        document.getElementById("map").style.visibility = "visible"; // Hiển thị lại bản đồ
     }
+}
+
 
     eraWidget.onConfiguration((configuration) => {
         configLAT = configuration.realtime_configs[0];
@@ -258,6 +257,7 @@
     #map {
         height: 700px;
         width: 100%;
+        visibility: visible;
     }
 </style>
 
