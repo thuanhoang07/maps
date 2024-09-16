@@ -76,8 +76,10 @@
     eraWidget.requestHistories( 
         new Date().getTime() - 1000 * 60 * 60 * 24 * 30,
         new Date().getTime()
+        
     );
-    
+    console.log("qua khu", new Date().getTime() - 1000 * 60 * 60 * 24 * 30);
+    console.log("hien tai", new Date().getTime());
     eraWidget.onHistories((histories) => { 
         console.log("onHistories:", histories);
 
@@ -85,9 +87,9 @@
         console.log("LAT_his_Array_all_including0:", LAT_his_Array_all_including0);
         LON_his_Array_all_including0 = histories[1].data;
         console.log("LON_his_Array_all_including0:", LON_his_Array_all_including0);
-        GPSON_his                      = histories[2].data;
+        GPSON_his = histories[2].data;
         console.log("GPSON_his:", GPSON_his);
-        SPEED_his                      = histories[3].data;
+        SPEED_his = histories[3].data;
         console.log("SPEED_his:", SPEED_his);
 
 
