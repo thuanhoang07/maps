@@ -6,7 +6,7 @@
     <title>Google Map Example Using Javascript</title>
 
     <!-- Load the Google Maps API -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBRr6PMgMCG4GrlhCbO_wp466zIhddRJlg&callback=initMap"
+    <script src="yourapi"
             async defer></script>
 
  
