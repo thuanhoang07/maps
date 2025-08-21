@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Google Map Example Using Javascript</title>
-
+ 
     <!-- Load the Google Maps API -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBRr6PMgMCG4GrlhCbO_wp466zIhddRJlg&callback=initMap"
             async defer></script>
@@ -53,18 +53,17 @@
     }
 
     function handleViewChange() {
-        currentView = document.getElementById("viewSelector").value;
+    currentView = document.getElementById("viewSelector").value;
 
-        if (currentView === "history") {
-            console.log("History mode selected. Map updates paused.");
-            clearInterval(updateInterval); // Dừng cập nhật bản đồ
-            document.getElementById("map").style.display = "none"; // Ẩn bản đồ
-        } else if (currentView === "maps") {
-            console.log("Maps mode selected. Resuming map updates.");
-            document.getElementById("map").style.display = "block"; // Hiển thị bản đồ
-            initMap(); // Khởi tạo lại bản đồ
-        }
+    if (currentView === "history") {
+        console.log("History mode selected. Map updates continue but hidden.");
+        document.getElementById("map").style.visibility = "hidden"; // Ẩn bản đồ nhưng vẫn giữ hoạt động ngầm
+    } else if (currentView === "maps") {
+        console.log("Maps mode selected. Resuming map display.");
+        document.getElementById("map").style.visibility = "visible"; // Hiển thị lại bản đồ
     }
+}
+
 
     eraWidget.onConfiguration((configuration) => {
         configLAT = configuration.realtime_configs[0];
@@ -78,8 +77,10 @@
     eraWidget.requestHistories( 
         new Date().getTime() - 1000 * 60 * 60 * 24 * 30,
         new Date().getTime()
+        
     );
-    
+    console.log("qua khu", new Date().getTime() - 1000 * 60 * 60 * 24 * 30);
+    console.log("hien tai", new Date().getTime());
     eraWidget.onHistories((histories) => { 
         console.log("onHistories:", histories);
 
@@ -87,9 +88,9 @@
         console.log("LAT_his_Array_all_including0:", LAT_his_Array_all_including0);
         LON_his_Array_all_including0 = histories[1].data;
         console.log("LON_his_Array_all_including0:", LON_his_Array_all_including0);
-        GPSON_his                      = histories[2].data;
+        GPSON_his = histories[2].data;
         console.log("GPSON_his:", GPSON_his);
-        SPEED_his                      = histories[3].data;
+        SPEED_his = histories[3].data;
         console.log("SPEED_his:", SPEED_his);
 
 
@@ -259,6 +260,7 @@
     #map {
         height: 700px;
         width: 100%;
+        visibility: visible;
     }
 </style>
 
