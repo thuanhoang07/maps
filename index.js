@@ -26,7 +26,7 @@ function initMap() {
      */
 
     // Cập nhật tọa độ của map và marker liên tục mỗi giây
-    setInterval(updateMapCenter, 10000);
+    setInterval(updateMapCenter, 5000);
 }
 
 function updateMapCenter() {
