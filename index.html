@@ -3,132 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Google Map with Custom InfoWindow</title>
+    <title>Google Map Example Using Javascript</title>
 
+    <!-- Load the Google Maps API -->
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBRr6PMgMCG4GrlhCbO_wp466zIhddRJlg&callback=initMap"
             async defer></script>
-            
-    <script src="https://www.unpkg.com/@eohjsc/era-widget@1.0.14/src/index.js"></script>
+
+    <!-- Link to your JavaScript and CSS -->
+    <script src="index.js"></script>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div id="map"></div>
+<div id="map"></div> <!-- Map container -->
 
+<p id="directions"></p> <!-- Directions or other information -->
 
-<!-- <script>
+<!-- Input toggle switch -->
+<!-- <label class="switch">
+    <input type="checkbox" id="name">
+    <span class="slider round"></span>
+</label> -->
+
+<script src="https://www.unpkg.com/@eohjsc/era-widget@1.0.14/src/index.js"></script>
+<script>
     const eraWidget = new EraWidget();
     let configLAT = null;
     let configLON = null;
-
+    
     eraWidget.onConfiguration((configuration) => {
+        console.log(configuration);
         configLAT = configuration.realtime_configs[0];
         configLON = configuration.realtime_configs[1];
-        console.log("Configuration Loaded for LAT & LON.");
+        console.log("Configuration Loaded:", configuration);
     });
 
     eraWidget.onValues((values) => {
+        
+        console.log("Value:", values);
         if (configLAT && values[configLAT.id]) {
             LAT = values[configLAT.id].value;
+            console.log("Value LAT:", LAT);
         }
         if (configLON && values[configLON.id]) {
             LON = values[configLON.id].value;
+            console.log("Value LON:", LON);
         }
     });
-
     eraWidget.ready();
-</script> -->
-
-
-<script>
-    let map;
-    let marker;
-    
-    let LAT = 10.772810039567775;  // Vĩ độ ban đầu
-    let LON = 106.69391248598654; // Kinh độ ban đầu
-
-    /**
-     * Hàm khởi tạo bản đồ
-     */
-    function initMap() {
-        const mapOptions = {
-            zoom: 20,
-            center: { lat: LAT, lng: LON },
-            mapTypeControl: true, 
-            streetViewControl: false
-        };
-        map = new google.maps.Map(document.getElementById('map'), mapOptions);
-
-        marker = new google.maps.Marker({
-            position: { lat: LAT, lng: LON },
-            map: map,
-        });
-        
-        // --- THAY ĐỔI NỘI DUNG INFOWINDOW ---
-        const infowindow = new google.maps.InfoWindow({
-            // 1. Bọc nội dung trong một thẻ div có class là "info-window-content"
-            content: '<div class="info-window-content">TÔI Ở ĐÂY</div>',
-        });
-
-        infowindow.open({
-            anchor: marker,
-            map: map,
-        });
-        
-        setInterval(updateMapCenter, 1000);
-    }
-
-    /**
-     * Hàm cập nhật vị trí của marker
-     */
-    function updateMapCenter() {
-        if (typeof LAT === 'number' && typeof LON === 'number') {
-            const newCenter = { lat: LAT, lng: LON };
-            map.setCenter(newCenter);
-            marker.setPosition(newCenter);
-        }
-    }
-</script>
-
-<style>
-    /* CSS để bản đồ hiển thị toàn màn hình */
-    html, body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-    }
-    #map {
-        height: 100%;
-        width: 100%;
-    }
-
-    /* --- CSS TÙY CHỈNH INFOWINDOW --- */
-
-    /* Ẩn nút đóng (dấu 'x') */
-    .gm-style-iw-c button {
-        display: none !important;
-    }
-
-    /* Tùy chỉnh khung chứa InfoWindow */
-    .gm-style-iw-c {
-        padding: 0 !important; /* Xóa hết padding mặc định */
-        box-shadow: none !important;
-        border-radius: 20px !important;
-    }
-    .gm-style-iw-d {
-        overflow: hidden !important;
-    }
-
-    /* --- CSS MỚI ĐỂ TRANG TRÍ CHỮ --- */
-    /* 2. Thêm style cho class "info-window-content" */
-    .info-window-content {
-        padding: 15px 15px; /* Thêm khoảng đệm bên trong cho đẹp */
-        text-align: center; /* Căn giữa chữ */
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Dùng font đẹp hơn */
-        font-size: 20px; /* Kích thước chữ */
-        font-weight: 600; /* Độ đậm vừa phải */
-        color: #23deff; /* Màu chữ */
-    }
-</style>
-
+</script> 
 </body>
 </html>
