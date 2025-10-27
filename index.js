@@ -1,7 +1,7 @@
 let map;
 let marker;
-let path;
-let pathCoordinates = [];
+// let path; // Đã xóa
+// let pathCoordinates = []; // Đã xóa
 let LAT;  
 let LON; 
 
@@ -20,16 +20,10 @@ function initMap() {
         map: map
     });
 
-    // Khởi tạo đối tượng Polyline để vẽ đường đi
-    path = new google.maps.Polyline({
-        path: pathCoordinates,
-        geodesic: true,
-        strokeColor: '#FF0000',
-        strokeOpacity: 1.0,
-        strokeWeight: 4
-    });
-
-    path.setMap(map);
+    /*
+     * Đã xóa khối code khởi tạo 'path' (google.maps.Polyline)
+     * và 'path.setMap(map)'
+     */
 
     // Cập nhật tọa độ của map và marker liên tục mỗi giây
     setInterval(updateMapCenter, 1000);
@@ -45,8 +39,8 @@ function updateMapCenter() {
         // Cập nhật vị trí của marker
         marker.setPosition(newCenter);
 
-        // Thêm vị trí mới vào tuyến đường
-        pathCoordinates.push(newCenter);
-        path.setPath(pathCoordinates); // Cập nhật đường đi
+        // Đã xóa 2 dòng code cập nhật đường đi (path)
+        // pathCoordinates.push(newCenter);
+        // path.setPath(pathCoordinates);
     }
 }
